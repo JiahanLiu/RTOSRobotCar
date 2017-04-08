@@ -1,6 +1,8 @@
 // PriorityPriorityQueue.h
 // PriorityQueue for Priority's in OS
 // TA: Daniel Leach
+#ifndef __PRIORITYPRIORITYQUEUE_H
+#define __PRIORITYPRIORITYQUEUE_H  1
 
 #include "../LiuWareTM4C123Lab3/OS.h"  
 
@@ -16,3 +18,5 @@ int priQueuePush(tcbType *input);
 tcbType* priQueuePeek(void);
 
 tcbType* priQueuePeekAndRotate(void);
+
+#endif
