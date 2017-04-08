@@ -8,6 +8,7 @@
 #include "../LiuWareTM4C123Lab3/UART.h"
 #include "../LiuWareTM4C123Lab3/OS.h"
 #include "../LiuWareTM4C123Lab3/ADC.h"
+#include "../LiuWareTm4C123Lab3/Interpreter.h"
 
 #define NULLCHAR '\0'
 
@@ -27,10 +28,7 @@ void OutCRLF(void);
 //----- Global ------
 char uartString[MAX_UART_IN_LEN];  // UART puts string into here
 
-extern long NumCreated; // Interpreter has a command to query main for Number of Threads Created
-extern int numThreads; 
 extern unsigned long NumSamples;
-extern int debugBlocked;
 extern Sema4Type mutexLCD;
 extern Sema4Type CurrentSize;
 extern Sema4Type RoomLeft;

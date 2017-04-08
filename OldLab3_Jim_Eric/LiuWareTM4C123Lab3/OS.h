@@ -20,7 +20,12 @@
 #define NULL 0
 
 #define NUMTHREADS 10
-#define NUMTHREADSPLUSONE (NUMTHREADS + 1)
+#define NUMTHREADSPLUSONE (NUMTHREADS + 1) //for queues
+
+static unsigned long DataLost;     // data sent by Producer, but not received by Consumer
+static unsigned long NumCreated;   // number of foreground threads created
+static int numThreads = 0;
+static int debugBlocked = 0;
 
 struct tcb{
 	int32_t *sp;

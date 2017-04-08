@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\ST7735.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\ST7735.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sat Apr 08 16:10:56 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sat Apr 08 16:53:34 2017
 <BR><P>
 <H3>Maximum Stack Usage =        240 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -667,6 +667,10 @@ Global Symbols
 
 <P><STRONG><a name="[fb]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
+<P><STRONG><a name="[fc]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+
+<P><STRONG><a name="[fd]"></a>__decompress1</STRONG> (Thumb, 92 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
+
 <P><STRONG><a name="[1b]"></a>ADC0Seq3_Handler</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, adc.o(i.ADC0Seq3_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = ADC0Seq3_Handler
 </UL>
@@ -737,7 +741,7 @@ Global Symbols
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 </UL>
 
-<P><STRONG><a name="[7e]"></a>Display</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, st7735testmain.o(i.Display))
+<P><STRONG><a name="[7e]"></a>Display</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, st7735testmain.o(i.Display))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232 + Unknown Stack Size
 <LI>Call Chain = Display &rArr; ST7735_Message &rArr; ST7735_MessageStringBody &rArr; ST7735_OutCharDivided &rArr; ST7735_DrawStringDivided &rArr; ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>
@@ -1461,11 +1465,11 @@ Global Symbols
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcessCommand
 </UL>
 
-<P><STRONG><a name="[fc]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[fe]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[fd]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[ff]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[fe]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[100]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[7f]"></a>doSleepDecrement</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, os.o(i.doSleepDecrement))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size

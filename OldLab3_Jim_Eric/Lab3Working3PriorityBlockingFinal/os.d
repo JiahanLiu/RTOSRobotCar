@@ -10,3 +10,4 @@
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/IDQueue.h
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/LEDS.h

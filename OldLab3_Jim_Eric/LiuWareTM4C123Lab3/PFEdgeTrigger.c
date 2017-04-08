@@ -51,8 +51,6 @@ void (*PF4Task)(void);   // user function
 //const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
 extern const long COLORWHEEL[WHEELSIZE];
 
-extern int NumCreated;
-
 void NothingTask() {
 }
 

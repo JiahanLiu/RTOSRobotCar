@@ -23,8 +23,6 @@ Used for add periodic thread
 extern const long COLORWHEEL[WHEELSIZE];
 int triggered = 0;
 
-extern int NumCreated;
-
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts

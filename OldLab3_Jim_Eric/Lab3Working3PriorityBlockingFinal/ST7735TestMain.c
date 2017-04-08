@@ -18,13 +18,13 @@
 #include <stdint.h>
 #include "../LiuWareTM4C123Lab3/PLL.h"
 #include "../LiuWareTM4C123Lab3/OS.h"
-#include "../LiuWareTM4C123Lab3/SysTickInts.h"
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/ST7735.h"
 #include "../LiuWareTM4C123Lab3/UART.h"
 #include "../LiuWareTm4C123Lab3/ADC.h"
 #include "../LiuWareTm4C123Lab3/Interpreter.h"
 #include "../LiuWareTm4C123Lab3/Timer0A.h"
+#include "../LiuWareTM4C123Lab3/LEDS.h" 
 
 #define PB2  (*((volatile unsigned long *)0x40005010))
 #define PB3  (*((volatile unsigned long *)0x40005020))
@@ -39,20 +39,6 @@ long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 void PortB_Init(void); 
-
-//---------------- Debug Lights -------------------
-#define LEDS      (*((volatile uint32_t *)0x40025038))
-#define RED       0x02
-#define BLUE      0x04
-#define GREEN     0x08
-#define WHEELSIZE 8           // must be an integer multiple of 2	
-//const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
-extern const long COLORWHEEL[WHEELSIZE];
-int wCounter = 0;
-extern int debugBlocked;
-
-unsigned long DataLost;     // data sent by Producer, but not received by Consumer
-unsigned long NumCreated;   // number of foreground threads created
 
 //------------------Task 5--------------------------------
 // UART background ISR performs serial input/output
@@ -89,7 +75,6 @@ short PID_stm32(short Error, short *Coeff);
 //    i.e., x[], y[] 
 //--------------end of Task 5-----------------------------
 
-unsigned long NumCreated;   // number of foreground threads created
 unsigned long PIDWork;      // current number of PID calculations finished
 unsigned long FilterWork;   // number of digital filter calculations finished
 unsigned long NumSamples;   // incremented every ADC sample, in Producer
@@ -160,9 +145,6 @@ unsigned long input;
 // one foreground task created with button push
 // foreground treads run for 2 sec and die
 // ***********ButtonWork*************
-#if Lab3
-//extern unsigned long MaxJitter;
-#endif
 void ButtonWork(void){
 	unsigned long myId = OS_Id(); 
   PB3 ^= 0x08;
@@ -243,7 +225,7 @@ unsigned long myId = OS_Id();
     cr4_fft_64_stm32(y,x,64);  // complex FFT of last 64 ADC values
     DCcomponent = y[0]&0xFFFF; // Real part at frequency 0, imaginary part should be zero
     OS_MailBox_Send(DCcomponent); // called every 2.5ms*64 = 160ms
-		//LEDS = COLORWHEEL[(wCounter++) % WHEELSIZE];
+		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
 	LEDS = RED;
   OS_Kill();  // done
@@ -263,7 +245,7 @@ unsigned long myId2 = OS_Id();
     PB5 = 0x20;
     ST7735_Message(0,2,"v(mV) =",voltage);  
     PB5 = 0x00;
-		//LEDS = COLORWHEEL[(wCounter++) % WHEELSIZE];
+		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
 	LEDS = RED;
   OS_Kill();  // done

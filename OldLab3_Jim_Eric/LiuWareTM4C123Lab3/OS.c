@@ -13,6 +13,7 @@
 #include "../LiuWareTM4C123Lab3/ADC.h" //ADC uses timer 2
 #include "../LiuWareTM4C123Lab3/IDQueue.h"
 #include "../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h" 
+#include "../LiuWareTM4C123Lab3/LEDS.h" 
 
 
 void DisableInterrupts(void); // Disable interrupts
@@ -28,17 +29,7 @@ void updateOSTime(void);
 #define NUMTHREADS 10
 #define NUMTHREADSPLUSONE (NUMTHREADS + 1)
 #define STACKSIZE 100
-//---------------- Debug Lights -------------------
-#define LEDS      (*((volatile uint32_t *)0x40025038))
-#define RED       0x02
-#define BLUE      0x04
-#define GREEN     0x08
-#define WHEELSIZE 8           // must be an integer multiple of 2	
-//const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
-const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
 
-int numThreads = 0;
-int debugBlocked = 0;
 //---------------- TCB ------------------- 
 tcbType tcbs[NUMTHREADS];
 tcbType *RunPt;
