@@ -1,8 +1,5 @@
 // ST7735.c
 // Driver for Liquid Display 
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel  Leach
 
 /***************************************************

@@ -1,4 +1,6 @@
-#include "../LiuWareTM4C123/tm4c123gh6pm.h"
+// Interpreter.h
+// Interpreter for UART
+// TA: Daniel Leach
 
 /*---------------------ProcessCommand---------------------
 * Function: ProcessCommand is a busy wait function that waits on the UART_InString to be available. 

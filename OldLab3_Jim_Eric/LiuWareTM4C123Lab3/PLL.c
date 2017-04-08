@@ -1,8 +1,5 @@
 // PLL.c
 // Sets Cycle Time
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel  Leach
 
 /* This example accompanies the book

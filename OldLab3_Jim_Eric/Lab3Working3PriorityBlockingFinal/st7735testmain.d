@@ -9,5 +9,4 @@
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/UART.h
 .\st7735testmain.o: ../LiuWareTm4C123Lab3/ADC.h
 .\st7735testmain.o: ../LiuWareTm4C123Lab3/Interpreter.h
-.\st7735testmain.o: ..\..\..\../LiuWareTM4C123/tm4c123gh6pm.h
 .\st7735testmain.o: ../LiuWareTm4C123Lab3/Timer0A.h

@@ -1,8 +1,5 @@
 // OS.c
 // Uses time to keep time for our real time OS. 
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel Leach
 
 #include <stdint.h>

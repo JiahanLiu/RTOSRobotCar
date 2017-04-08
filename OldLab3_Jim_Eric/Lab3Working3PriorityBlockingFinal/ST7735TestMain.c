@@ -1,8 +1,5 @@
 // Lab3.c
 // Calls Lab 1 Main
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel  Leach
 // PORT/Timer Uses:
 /*

@@ -1,8 +1,5 @@
 // Interpreter.c
 // Interpreter for UART
-// Last modified Lab 2 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel Leach
 
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"

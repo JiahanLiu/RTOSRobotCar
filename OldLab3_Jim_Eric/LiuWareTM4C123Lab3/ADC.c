@@ -1,8 +1,5 @@
 // ADC.c
-// Driver for ADC.
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
+// Driver for ADC
 // TA: Daniel Leach
 
 #include <stdint.h>
