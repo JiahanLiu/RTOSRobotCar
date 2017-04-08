@@ -2,7 +2,7 @@
 // PriorityQueue for ThreadID's OS
 // TA: Daniel Leach
 
-#include "../LiuWareTM4C123Lab3/IDPriorityQueue.h"
+#include "../LiuWareTM4C123Lab3/IDQueue.h"
 #include "../LiuWareTM4C123Lab3/OS.h"
 
 //---------------- Private Queue Vars-------------------

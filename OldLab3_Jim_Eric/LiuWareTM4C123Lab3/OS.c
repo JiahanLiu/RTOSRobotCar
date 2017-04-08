@@ -11,8 +11,8 @@
 #include "../LiuWareTM4C123Lab3/Timer1.h" //used for periodic thread 1
 #include "../LiuWareTM4C123Lab3/PFEdgeTrigger.h"
 #include "../LiuWareTM4C123Lab3/ADC.h" //ADC uses timer 2
-#include "../LiuWareTM4C123Lab3/IDPriorityQueue.h" 
-#include "../LiuWareTM4C123Lab3/PriorityPriorityQueue.h" 
+#include "../LiuWareTM4C123Lab3/IDQueue.h"
+#include "../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h" 
 
 
 void DisableInterrupts(void); // Disable interrupts

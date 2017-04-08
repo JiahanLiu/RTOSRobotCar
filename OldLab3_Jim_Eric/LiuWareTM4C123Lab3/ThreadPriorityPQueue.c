@@ -2,7 +2,7 @@
 // PriorityQueue for Priority's in OS
 // TA: Daniel Leach
 
-#include "../LiuWareTM4C123Lab3/PriorityPriorityQueue.h" 
+#include "../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h" 
 #include "../LiuWareTM4C123Lab3/OS.h"  
 
 //---------------- PriorityQueue Helper Functions-------------------

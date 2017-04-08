@@ -322,9 +322,8 @@ int main(void){
 
 //*******attach background tasks***********
   OS_AddSW1Task(&SW1Push,2); //not stuck
-#if Lab3
   OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
-#endif
+
   ADC_Init(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
   OS_AddPeriodicThread(&DAS,PERIOD,0); // 2 kHz real time sampling of PD3 -> input = ADC_In(); 
 	
