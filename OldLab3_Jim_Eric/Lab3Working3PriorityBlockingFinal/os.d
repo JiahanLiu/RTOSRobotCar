@@ -8,3 +8,6 @@
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer1.h
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PFEdgeTrigger.h
 .\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/IDPriorityQueue.h
+.\os.o: ..\..\..\../LiuWareTM4C123/tm4c123gh6pm.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PriorityPriorityQueue.h

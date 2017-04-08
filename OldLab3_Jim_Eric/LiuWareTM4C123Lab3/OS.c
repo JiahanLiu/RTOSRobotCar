@@ -5,8 +5,8 @@
 // Eric Li, ecl625
 // TA: Daniel Leach
 
-#include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include <stdint.h>
+#include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/OS.h"  
 #include "../LiuWareTM4C123Lab3/PLL.h"
 #include "../LiuWareTM4C123Lab3/Timer4A.h" //used for sleep decrement + OS Time
@@ -14,6 +14,8 @@
 #include "../LiuWareTM4C123Lab3/Timer1.h" //used for periodic thread 1
 #include "../LiuWareTM4C123Lab3/PFEdgeTrigger.h"
 #include "../LiuWareTM4C123Lab3/ADC.h" //ADC uses timer 2
+#include "../LiuWareTM4C123Lab3/IDPriorityQueue.h" 
+#include "../LiuWareTM4C123Lab3/PriorityPriorityQueue.h" 
 
 
 void DisableInterrupts(void); // Disable interrupts
@@ -44,126 +46,6 @@ int debugBlocked = 0;
 tcbType tcbs[NUMTHREADS];
 tcbType *RunPt;
 int32_t Stacks[NUMTHREADS][STACKSIZE];
-
-//---------------- Queue Vars-------------------
-unsigned long idQueue[NUMTHREADSPLUSONE];
-int idQueueHead = 0;
-int idQueueTail = 0; //bug resolve -> Abstract that tail must always point to empty
-/* bug resolve 
-* imagine that queue was only length 'NUMTHREADS' and queue was full, then head == tail even though it is not empty
-*/
-
-int idQueuePop() {
-	if(idQueueHead == idQueueTail) { //empty
-		return -1;
-	}
-	int oldHead = idQueueHead;
-	idQueueHead = (idQueueHead + 1) % (NUMTHREADSPLUSONE); 
-	return idQueue[oldHead]; 
-}	
-
-int idQueuePush(unsigned long input) {
-	if( (idQueueTail + 1) % (NUMTHREADSPLUSONE) == idQueueHead) { //full
-		return -1;
-	}
-	idQueue[idQueueTail] = input;
-	idQueueTail = (idQueueTail + 1) % (NUMTHREADSPLUSONE); //add at 0 then increment
-	return 1; 
-}
-
-//---------------- PriorityQueue Helper Functions-------------------
-void priQueuePushBack(int index);
-void priQueueShiftForward(int index);
-//---------------- PriorityQueue Vars-------------------
-tcbType *priQueue[NUMTHREADSPLUSONE];
-int priQueueHead = 0;
-int priQueueTail = 0; //points to empty spot
-int numPriItems = 0;
-
-tcbType * priQueuePop() {
-	if(priQueueHead == priQueueTail) {
-		return NULL;
-	}
-	int oldHead = priQueueHead;
-	priQueueHead = (priQueueHead + 1) % (NUMTHREADSPLUSONE); 
-	numPriItems--;
-	return priQueue[oldHead]; 
-}	
-
-/* priQueueRemove 
-* input: pointer to tcbs entry that is wished to be removed
-*/
-int priQueueRemove(tcbType *input) {
-	if(priQueueHead == priQueueTail) { //empty
-		return 0;
-	}
-	int currentIndex = priQueueHead;
-	while(priQueue[currentIndex] != input) { //loop to item to be removed
-		currentIndex = (currentIndex + 1) % NUMTHREADSPLUSONE;
-	}
-	while(currentIndex != (priQueueTail + (NUMTHREADSPLUSONE - 1)) % NUMTHREADSPLUSONE ) { //-1 because of corner case that we only have 1 item 
-		priQueueShiftForward(currentIndex);
-		currentIndex = (currentIndex + 1) % NUMTHREADSPLUSONE; 
-	}
-	priQueueTail = (priQueueTail + NUMTHREADSPLUSONE - 1) % NUMTHREADSPLUSONE;
-	numPriItems--;
-	return 1;
-}
-
-int priQueuePush(tcbType *input) {
-	if( (priQueueTail + 1) % (NUMTHREADSPLUSONE) == priQueueHead) { //checking whether we have space or not
-		return -1;
-	} 
-	int insertLoc = priQueueTail; //tail starts at empty space
-	for(int i = 1; i <= numPriItems; i++) {
-		int index = (priQueueTail + NUMTHREADSPLUSONE - i) % NUMTHREADSPLUSONE;  
-		if(input->priority < priQueue[index]->priority) {
-			priQueuePushBack(index);
-			insertLoc = index;
-		}
-	}
-	priQueue[insertLoc] = input;
-	priQueueTail = (priQueueTail + 1) % (NUMTHREADSPLUSONE); 
-	numPriItems++; //if we only have 4 items before hand we only want to check through 4 items and then increment to 5 items
-	return 1; 
-}
-
-tcbType* priQueuePeek() {
-	if(0 == numPriItems) {
-		return 
-			NULL; //we want to force crash to avoid unexpected behavior
-	}
-	return priQueue[priQueueHead]; 
-}
-
-tcbType* priQueuePeekAndRotate() {
-	if(0 == numPriItems) {
-		return NULL; //we want to force crash to avoid unexpected behavior
-	}
-	tcbType *originalFirst = priQueue[priQueueHead]; //extract to make hole 
-	int originalPriority = originalFirst->priority;
-	int currentIndex = priQueueHead;
-	int holeIndex = priQueueHead;
-	for(int i = 0; i < numPriItems - 1; i++) {
-		tcbType *next = priQueue[(currentIndex+1) % NUMTHREADSPLUSONE]; //look at next
-		currentIndex = (currentIndex + 1) % NUMTHREADSPLUSONE; //look at next one
-		if(next->priority == originalPriority) { //is next priority on par with origional Priority
-			priQueueShiftForward(holeIndex); //
-			holeIndex = currentIndex;
-		}
-	}
-	priQueue[holeIndex] = originalFirst; 
-	return originalFirst;
-}
-
-void priQueuePushBack(int index) {
-	priQueue[(index + 1) % NUMTHREADSPLUSONE] = priQueue[(index)];
-}
-
-void priQueueShiftForward(int index) {
-	priQueue[(index)] = priQueue[(index + 1) % NUMTHREADSPLUSONE];
-}
-
 
 //---------------- OSTime -------------------
 unsigned long OStime; //time in MS

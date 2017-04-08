@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\ST7735.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\ST7735.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sun Mar 26 20:36:29 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sat Apr 08 15:43:12 2017
 <BR><P>
 <H3>Maximum Stack Usage =        240 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -636,7 +636,7 @@ Global Symbols
 <P><STRONG><a name="[fa]"></a>OS_EnableInterrupts</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, osasm.o(.text), UNUSED)
 
 <P><STRONG><a name="[9]"></a>SysTick_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, osasm.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size
 <LI>Call Chain = SysTick_Handler &rArr; Scheduler &rArr; priQueuePeekAndRotate
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Scheduler
@@ -644,7 +644,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
 <P><STRONG><a name="[8]"></a>PendSV_Handler</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, osasm.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size
 <LI>Call Chain = PendSV_Handler &rArr; Scheduler &rArr; priQueuePeekAndRotate
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Scheduler
@@ -815,11 +815,11 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 52 + Unknown Stack Size
 <LI>Call Chain = OS_AddThread &rArr; priQueuePush
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
+<BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeek
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;idQueuePop
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
+<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetInitialStack
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
@@ -874,10 +874,10 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
 <LI>Call Chain = OS_Init &rArr; Timer4A_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer4A_Init
+<BR>[Calls]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;idQueuePush
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer4A_Init
 <LI><a href="#[b7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PLL_Init
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;initHardFault
-<LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;idQueuePush
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_InitDriverInitSemaphore
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
@@ -909,11 +909,11 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 12 + Unknown Stack Size
 <LI>Call Chain = OS_Kill &rArr; priQueueRemove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeek
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;idQueuePush
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
+<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_KilledSuspend
 </UL>
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SW2Push
@@ -931,8 +931,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
 <LI>Call Chain = OS_Launch
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartOS
-<LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeek
+<BR>[Calls]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeek
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartOS
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -969,8 +969,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size
 <LI>Call Chain = OS_Signal &rArr; priQueuePush
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
+<BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_MessageString
@@ -986,9 +986,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 28 + Unknown Stack Size
 <LI>Call Chain = OS_Sleep &rArr; priQueueRemove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Suspend
 </UL>
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ButtonWork
@@ -1012,8 +1012,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 20 + Unknown Stack Size
 <LI>Call Chain = OS_Wait &rArr; priQueueRemove
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EnableInterrupts
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Suspend
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisableInterrupts
 </UL>
@@ -1182,14 +1182,14 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 144 + Unknown Stack Size
 <LI>Call Chain = ST7735_InitRDivided &rArr; ST7735_DrawString &rArr; ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_InitSemaphore
-<LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_SetCursor
-<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillScreen
-<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_DrawString
-<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writedata
+<BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writedata
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writecommand
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_InitSemaphore
+<LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_SetCursor
+<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillScreen
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_DrawString
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1292,8 +1292,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> st7735testmain.o(i.main)
 </UL>
-<P><STRONG><a name="[8c]"></a>Scheduler</STRONG> (Thumb, 12 bytes, Stack size 4 bytes, os.o(i.Scheduler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Scheduler &rArr; priQueuePeekAndRotate
+<P><STRONG><a name="[8c]"></a>Scheduler</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, os.o(i.Scheduler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = Scheduler &rArr; priQueuePeekAndRotate
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeekAndRotate
 </UL>
@@ -1471,10 +1471,10 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size
 <LI>Call Chain = doSleepDecrement &rArr; priQueuePush
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
+<BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;StartCritical
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EndCritical
 <LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;updateOSTime
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> os.o(i.OS_Init)
 </UL>
@@ -1488,11 +1488,11 @@ Global Symbols
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_MessageDecBody
 </UL>
 
-<P><STRONG><a name="[ac]"></a>idQueuePop</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, os.o(i.idQueuePop))
+<P><STRONG><a name="[ac]"></a>idQueuePop</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, idpriorityqueue.o(i.idQueuePop))
 <BR><BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_AddThread
 </UL>
 
-<P><STRONG><a name="[b8]"></a>idQueuePush</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, os.o(i.idQueuePush))
+<P><STRONG><a name="[b8]"></a>idQueuePush</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, idpriorityqueue.o(i.idQueuePush))
 <BR><BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Kill
 <LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Init
 </UL>
@@ -1519,13 +1519,13 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[b0]"></a>priQueuePeek</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, os.o(i.priQueuePeek))
+<P><STRONG><a name="[b0]"></a>priQueuePeek</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, prioritypriorityqueue.o(i.priQueuePeek))
 <BR><BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Launch
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Kill
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_AddThread
 </UL>
 
-<P><STRONG><a name="[e0]"></a>priQueuePeekAndRotate</STRONG> (Thumb, 110 bytes, Stack size 28 bytes, os.o(i.priQueuePeekAndRotate))
+<P><STRONG><a name="[e0]"></a>priQueuePeekAndRotate</STRONG> (Thumb, 110 bytes, Stack size 28 bytes, prioritypriorityqueue.o(i.priQueuePeekAndRotate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = priQueuePeekAndRotate
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueShiftForward
@@ -1533,7 +1533,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Scheduler
 </UL>
 
-<P><STRONG><a name="[af]"></a>priQueuePush</STRONG> (Thumb, 132 bytes, Stack size 20 bytes, os.o(i.priQueuePush))
+<P><STRONG><a name="[af]"></a>priQueuePush</STRONG> (Thumb, 132 bytes, Stack size 20 bytes, prioritypriorityqueue.o(i.priQueuePush))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = priQueuePush
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePushBack
@@ -1543,11 +1543,11 @@ Global Symbols
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_AddThread
 </UL>
 
-<P><STRONG><a name="[f1]"></a>priQueuePushBack</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, os.o(i.priQueuePushBack))
+<P><STRONG><a name="[f1]"></a>priQueuePushBack</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, prioritypriorityqueue.o(i.priQueuePushBack))
 <BR><BR>[Called By]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePush
 </UL>
 
-<P><STRONG><a name="[bc]"></a>priQueueRemove</STRONG> (Thumb, 120 bytes, Stack size 12 bytes, os.o(i.priQueueRemove))
+<P><STRONG><a name="[bc]"></a>priQueueRemove</STRONG> (Thumb, 120 bytes, Stack size 12 bytes, prioritypriorityqueue.o(i.priQueueRemove))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = priQueueRemove
 </UL>
 <BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueShiftForward
@@ -1557,7 +1557,7 @@ Global Symbols
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Kill
 </UL>
 
-<P><STRONG><a name="[f0]"></a>priQueueShiftForward</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, os.o(i.priQueueShiftForward))
+<P><STRONG><a name="[f0]"></a>priQueueShiftForward</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, prioritypriorityqueue.o(i.priQueueShiftForward))
 <BR><BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueueRemove
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;priQueuePeekAndRotate
 </UL>
@@ -1576,19 +1576,19 @@ Local Symbols
 <P><STRONG><a name="[d8]"></a>commandList</STRONG> (Thumb, 86 bytes, Stack size 24 bytes, st7735.o(i.commandList))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = commandList &rArr; Delay1ms
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay1ms
-<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writedata
+<BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writedata
 <LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;writecommand
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay1ms
 </UL>
-<BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
-<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
+<BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commonInit
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
 </UL>
 
 <P><STRONG><a name="[d7]"></a>commonInit</STRONG> (Thumb, 340 bytes, Stack size 8 bytes, st7735.o(i.commonInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = commonInit &rArr; commandList &rArr; Delay1ms
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay1ms
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Delay1ms
 </UL>
 <BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
 </UL>
@@ -1612,17 +1612,17 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[d9]"></a>writecommand</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, st7735.o(i.writecommand))
-<BR><BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
-<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<BR><BR>[Called By]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
 </UL>
 
 <P><STRONG><a name="[d4]"></a>writedata</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, st7735.o(i.writedata))
-<BR><BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillRect
-<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<BR><BR>[Called By]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pushColor
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitRDivided
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_FillRect
 </UL>
 
 <P><STRONG><a name="[e5]"></a>copyHardwareToSoftware</STRONG> (Thumb, 36 bytes, Stack size 4 bytes, uart.o(i.copyHardwareToSoftware))

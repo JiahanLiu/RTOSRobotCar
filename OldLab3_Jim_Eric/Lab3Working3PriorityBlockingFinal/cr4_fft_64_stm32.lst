@@ -644,9 +644,8 @@ xb4be,0x0c7c
   304 000002CE                 END
 Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\cr4_ff
 t_64_stm32.d -o.\cr4_fft_64_stm32.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\
-Include -IC:\Keil\ARM\Inc\Luminary --predefine="__EVAL SETA 1" --predefine="__M
-ICROLIB SETA 1" --list=.\cr4_fft_64_stm32.lst ..\LiuWareTM4C123Lab3\cr4_fft_64_
-stm32.s
+Include -IC:\Keil\ARM\Inc\Luminary --predefine="__MICROLIB SETA 1" --list=.\cr4
+_fft_64_stm32.lst ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
 
 
 
@@ -722,13 +721,13 @@ Symbol: NPT
    Definitions
       At line 46 in file ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
    Uses
-      At line 135 in macro Ø²-8-OPT
+      At line 135 in macro 3BðAOPT
       at line 223 in file ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
-      At line 137 in macro Ø²-8-OPT
+      At line 137 in macro 3BðAOPT
       at line 223 in file ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
-      At line 139 in macro Ø²-8-OPT
+      At line 139 in macro 3BðAOPT
       at line 223 in file ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
-      At line 141 in macro Ø²-8-OPT
+      At line 141 in macro 3BðAOPT
       at line 223 in file ..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s
 
 1 symbol
@@ -747,4 +746,4 @@ Symbol: TableFFT
       None
 Comment: TableFFT unused
 1 symbol
-360 symbols in table
+359 symbols in table

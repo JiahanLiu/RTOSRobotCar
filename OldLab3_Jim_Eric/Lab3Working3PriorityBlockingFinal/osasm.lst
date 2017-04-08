@@ -161,8 +161,8 @@ ARM Macro Assembler    Page 3
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M4 --apcs=interwork --depend=.\osasm.
 d -o.\osasm.o -IC:\Keil\ARM\RV31\INC -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\
-Inc\Luminary --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --list
-=.\osasm.lst ..\LiuWareTM4C123Lab3\osasm.s
+Inc\Luminary --predefine="__MICROLIB SETA 1" --list=.\osasm.lst ..\LiuWareTM4C1
+23Lab3\osasm.s
 
 
 
@@ -244,4 +244,4 @@ Symbol: Scheduler
       At line 72 in file ..\LiuWareTM4C123Lab3\osasm.s
 
 2 symbols
-342 symbols in table
+341 symbols in table
