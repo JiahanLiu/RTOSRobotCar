@@ -480,6 +480,11 @@
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\PFEdgeTrigger.c</FilePath>
             </File>
+            <File>
+              <FileName>Timer1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\Timer1.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
