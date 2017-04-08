@@ -33,9 +33,6 @@
 	
 #define PERIOD1MS 80000
 
-#define Lab2 0
-#define Lab3 1
-
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
 long StartCritical (void);    // previous I bit, disable interrupts
@@ -56,12 +53,6 @@ extern int debugBlocked;
 
 unsigned long DataLost;     // data sent by Producer, but not received by Consumer
 unsigned long NumCreated;   // number of foreground threads created
-
-unsigned long Count1;   // number of times thread1 loops
-unsigned long Count2;   // number of times thread2 loops
-unsigned long Count3;   // number of times thread3 loops
-unsigned long Count4;   // number of times thread4 loops
-unsigned long Count5;   // number of times thread5 loops
 
 //------------------Task 5--------------------------------
 // UART background ISR performs serial input/output
@@ -97,15 +88,6 @@ short PID_stm32(short Error, short *Coeff);
 // 2) print debugging parameters 
 //    i.e., x[], y[] 
 //--------------end of Task 5-----------------------------
-
-
-#if Lab2
-long MaxJitter;             // largest time jitter between interrupts in usec
-unsigned long MaxDifference; 
-#define JITTERSIZE 64
-unsigned long const JitterSize=JITTERSIZE;
-unsigned long JitterHistogram[JITTERSIZE]={0,};
-#endif
 
 unsigned long NumCreated;   // number of foreground threads created
 unsigned long PIDWork;      // current number of PID calculations finished
@@ -157,46 +139,6 @@ static unsigned long n=3;   // 3, 4, or 5
 // inputs:  none
 // outputs: none
 unsigned long DASoutput;
-#if Lab2
-void DAS(void){ 
-	unsigned long input;  
-	unsigned static long LastTime;  // time at previous ADC sample
-	unsigned long thisTime;         // time at current ADC sample
-	long jitter;                    // time between measured and expected, in us
-		if(NumSamples < RUNLENGTH){   // finite time run
-			PB2 ^= 0x04;
-			input = ADC_In();           // channel set when calling ADC_Init
-			PB2 ^= 0x04;
-			thisTime = OS_Time();       // current time, 12.5 ns
-			DASoutput = Filter(input);
-			FilterWork++;        // calculation finished
-			if(FilterWork>1){    // ignore timing of first interrupt
-				unsigned long diff = OS_TimeDifference(LastTime,thisTime);
-				
-				if(diff>PERIOD){
-					jitter = (diff-PERIOD+4)/8;  // in 0.1 usec
-				}else{
-					jitter = (PERIOD-diff+4)/8;  // in 0.1 usec
-				}
-				if(jitter > MaxJitter){
-					//MaxJitter = diff; 
-					MaxJitter = jitter; // in usec
-				}       // jitter should be 0
-				
-				if(diff > MaxDifference) {
-					MaxDifference = diff;			
-				}
-				//if(jitter >= JitterSize){ /* for histogram
-					//jitter = JITTERSIZE-1;
-				//}
-				//JitterHistogram[jitter]++; 
-			}
-			LastTime = thisTime;
-			PB2 ^= 0x04;
-		}
-}
-#endif
-#if Lab3
 void DAS(void){ 
 unsigned long input;  
 	unsigned long myId = OS_Id(); 
@@ -211,7 +153,6 @@ unsigned long input;
   }
 	//OS_Kill();	
 }
-#endif
 //--------------end of Task 1-----------------------------
 
 //------------------Task 2--------------------------------

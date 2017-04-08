@@ -2,9 +2,6 @@
 // Use UART0 to implement bidirectional data transfer to and from a
 // computer running HyperTerminal.  This time, interrupts and FIFOs
 // are used.
-// Last modified 2/10/17 Jiahan Liu, Eric Li
-// Jiahan Liu, jl57566
-// Eric Li, ecl625
 // TA: Daniel  Leach
 
 /* This example accompanies the book
