@@ -71,7 +71,8 @@ void Timer0A_Init(void(*task)(void), uint32_t period, uint32_t priority){
 	MaxJitterT0 = 0;
 	// -End Jitter
   NVIC_EN0_R = 1<<19;           // 9) enable IRQ 19 in NVIC
-  TIMER0_CTL_R = 0x00000001;    // 10) enable TIMER0A
+  TIMER0_CTL_R = 0x00000001 + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;    // 10) enable TIMER0A
+	TIMER0_CTL_R &= ~TIMER_CTL_RTCEN;//disable RTCEN
   EndCritical(sr);
 }
 void Timer0A_Handler(void){

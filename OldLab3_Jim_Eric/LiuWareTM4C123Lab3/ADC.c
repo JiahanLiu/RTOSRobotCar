@@ -309,7 +309,8 @@ int ADC_Collect_Init(uint32_t channelNum, uint32_t fs, void(*pTask)(unsigned lon
   TIMER2_TAPR_R = 0;            // prescale value for trigger
   TIMER2_TAILR_R = (80000000/fs)-1;    // start value for trigger
   TIMER2_IMR_R = 0x00000000;    // disable all interrupts
-  TIMER2_CTL_R |= 0x00000001;   // enable timer0A 32-b, periodic, no interrupts
+  TIMER2_CTL_R |= 0x00000001 + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;   // enable timer0A 32-b, periodic, no interrupts
+	TIMER2_CTL_R &= ~TIMER_CTL_RTCEN;//disable RTCEN
 	
 	ADC0_PC_R = 0x01;         // configure for 125K samples/sec
   ADC0_SSPRI_R = 0x3210;    // sequencer 0 is highest, sequencer 3 is lowest

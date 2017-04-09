@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\ST7735.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\ST7735.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sat Apr 08 16:53:34 2017
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sat Apr 08 21:31:24 2017
 <BR><P>
 <H3>Maximum Stack Usage =        240 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -667,16 +667,12 @@ Global Symbols
 
 <P><STRONG><a name="[fb]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
-<P><STRONG><a name="[fc]"></a>__decompress</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
-
-<P><STRONG><a name="[fd]"></a>__decompress1</STRONG> (Thumb, 92 bytes, Stack size unknown bytes, __dczerorl2.o(.text), UNUSED)
-
 <P><STRONG><a name="[1b]"></a>ADC0Seq3_Handler</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, adc.o(i.ADC0Seq3_Handler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = ADC0Seq3_Handler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[8e]"></a>ADC_Collect_Init</STRONG> (Thumb, 1094 bytes, Stack size 24 bytes, adc.o(i.ADC_Collect_Init))
+<P><STRONG><a name="[8e]"></a>ADC_Collect_Init</STRONG> (Thumb, 1102 bytes, Stack size 24 bytes, adc.o(i.ADC_Collect_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24 + Unknown Stack Size
 <LI>Call Chain = ADC_Collect_Init
 </UL>
@@ -741,7 +737,7 @@ Global Symbols
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 </UL>
 
-<P><STRONG><a name="[7e]"></a>Display</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, st7735testmain.o(i.Display))
+<P><STRONG><a name="[7e]"></a>Display</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, st7735testmain.o(i.Display))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232 + Unknown Stack Size
 <LI>Call Chain = Display &rArr; ST7735_Message &rArr; ST7735_MessageStringBody &rArr; ST7735_OutCharDivided &rArr; ST7735_DrawStringDivided &rArr; ST7735_DrawCharS &rArr; ST7735_FillRect &rArr; setAddrWindow
 </UL>
@@ -838,7 +834,7 @@ Global Symbols
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcessCommand
 </UL>
 
-<P><STRONG><a name="[96]"></a>OS_Fifo_Get</STRONG> (Thumb, 56 bytes, Stack size 8 bytes, os.o(i.OS_Fifo_Get))
+<P><STRONG><a name="[96]"></a>OS_Fifo_Get</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, os.o(i.OS_Fifo_Get))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44 + Unknown Stack Size
 <LI>Call Chain = OS_Fifo_Get &rArr; OS_Signal &rArr; priQueuePush
 </UL>
@@ -857,11 +853,12 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b5]"></a>OS_Fifo_Put</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, os.o(i.OS_Fifo_Put))
+<P><STRONG><a name="[b5]"></a>OS_Fifo_Put</STRONG> (Thumb, 88 bytes, Stack size 8 bytes, os.o(i.OS_Fifo_Put))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44 + Unknown Stack Size
 <LI>Call Chain = OS_Fifo_Put &rArr; OS_Signal &rArr; priQueuePush
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Signal
+<BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Wait
+<LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Signal
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Producer
 </UL>
@@ -941,7 +938,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ef]"></a>OS_MailBox_Init</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, os.o(i.OS_MailBox_Init))
+<P><STRONG><a name="[ef]"></a>OS_MailBox_Init</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, os.o(i.OS_MailBox_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1026,6 +1023,7 @@ Global Symbols
 <LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_Message
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_MailBox_Send
 <LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_MailBox_Recv
+<LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Fifo_Put
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OS_Fifo_Get
 </UL>
 
@@ -1333,7 +1331,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[a4]"></a>Timer0A_Init</STRONG> (Thumb, 120 bytes, Stack size 24 bytes, timer0a.o(i.Timer0A_Init))
+<P><STRONG><a name="[a4]"></a>Timer0A_Init</STRONG> (Thumb, 130 bytes, Stack size 24 bytes, timer0a.o(i.Timer0A_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24 + Unknown Stack Size
 <LI>Call Chain = Timer0A_Init
 </UL>
@@ -1348,7 +1346,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[a5]"></a>Timer1_Init</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, timer1.o(i.Timer1_Init))
+<P><STRONG><a name="[a5]"></a>Timer1_Init</STRONG> (Thumb, 126 bytes, Stack size 24 bytes, timer1.o(i.Timer1_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24 + Unknown Stack Size
 <LI>Call Chain = Timer1_Init
 </UL>
@@ -1363,7 +1361,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[b9]"></a>Timer4A_Init</STRONG> (Thumb, 98 bytes, Stack size 24 bytes, timer4a.o(i.Timer4A_Init))
+<P><STRONG><a name="[b9]"></a>Timer4A_Init</STRONG> (Thumb, 108 bytes, Stack size 24 bytes, timer4a.o(i.Timer4A_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24 + Unknown Stack Size
 <LI>Call Chain = Timer4A_Init
 </UL>
@@ -1465,11 +1463,11 @@ Global Symbols
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ProcessCommand
 </UL>
 
-<P><STRONG><a name="[fe]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[fc]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[ff]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[fd]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[100]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[fe]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[7f]"></a>doSleepDecrement</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, os.o(i.doSleepDecrement))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36 + Unknown Stack Size

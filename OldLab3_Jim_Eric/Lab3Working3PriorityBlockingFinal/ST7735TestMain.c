@@ -40,6 +40,22 @@ void EndCritical(long sr);    // restore I bit to previous value
 void WaitForInterrupt(void);  // low power mode
 void PortB_Init(void); 
 
+#define FS 400              // producer/consumer sampling
+#define RUNLENGTH (5 * FS )   // display results and quit when NumSamples==RUNLENGTH
+//#define FS 5
+//#define RUNLENGTH (10)   // display results and quit when NumSamples==RUNLENGTH
+
+//data variables
+unsigned long PIDWork;      // current number of PID calculations finished
+unsigned long FilterWork;   // number of digital filter calculations finished
+unsigned long NumSamples;   // incremented every ADC sample, in Producer
+unsigned long DataLost = 0;     // data sent by Producer, but not received by Consumer
+
+//debug variables
+unsigned long numCreated = 0;   // number of foreground threads created
+int numThreads = 0;
+int debugBlocked = 0;
+
 //------------------Task 5--------------------------------
 // UART background ISR performs serial input/output
 // Two software fifos are used to pass I/O data to foreground
@@ -55,7 +71,7 @@ void PortB_Init(void);
 
 void Interpreter(void) { //lab 1 thread				
 	UART_Init();
-	UART_OutString("Hello Lab 2.2.0");
+	UART_OutString("Hello Lab 6.0.0");
 	OutCRLF();
 	while(1) {
 		ProcessCommand();
@@ -75,15 +91,6 @@ short PID_stm32(short Error, short *Coeff);
 //    i.e., x[], y[] 
 //--------------end of Task 5-----------------------------
 
-unsigned long PIDWork;      // current number of PID calculations finished
-unsigned long FilterWork;   // number of digital filter calculations finished
-unsigned long NumSamples;   // incremented every ADC sample, in Producer
-//#define FS 400              // producer/consumer sampling
-#define FS 400              // producer/consumer sampling
-#define RUNLENGTH (5 * FS )   // display results and quit when NumSamples==RUNLENGTH
-
-//#define RUNLENGTH (1*FS)   // display results and quit when NumSamples==RUNLENGTH
-//#define RUNLENGTH (1*FS)   // display results and quit when NumSamples==RUNLENGTH
 // 20-sec finite time experiment duration 
 #define PERIOD TIME_500US   // DAS 2kHz sampling period in system time units
 long x[64],y[64];           // input and output arrays for FFT
@@ -148,7 +155,7 @@ unsigned long input;
 void ButtonWork(void){
 	unsigned long myId = OS_Id(); 
   PB3 ^= 0x08;
-  ST7735_Message(1,0,"NumCreated =",NumCreated); 
+  ST7735_Message(1,0,"NumCreated =",numCreated); 
   PB3 ^= 0x08;
   OS_Sleep(50);     // set this to sleep for 50msec
   ST7735_Message(1,1,"PIDWork     =",PIDWork);
@@ -163,7 +170,7 @@ void ButtonWork(void){
 // Adds another foreground task
 // background threads execute once and return
 void SW1Push(void){
-	NumCreated += OS_AddThread(&ButtonWork,100,2);
+	numCreated += OS_AddThread(&ButtonWork,100,2);
 	OS_Kill();
 }
 //************SW2Push*************
@@ -171,7 +178,7 @@ void SW1Push(void){
 // Adds another foreground task
 // background threads execute once and return
 void SW2Push(void){
-  NumCreated += OS_AddThread(&ButtonWork,100,2);
+  numCreated += OS_AddThread(&ButtonWork,100,2);
 	OS_Kill();
 }
 //--------------end of Task 2-----------------------------
@@ -214,8 +221,8 @@ unsigned long t;                  // time in 2.5 ms
 unsigned long myId = OS_Id(); 
 	DataLost = 0; 
   ADC_Collect_Init(5, FS, &Producer); // start ADC sampling, channel 5, PD2, 400 Hz
-  NumCreated += OS_AddThread(&Display,128,1); 
-  while(NumSamples < RUNLENGTH) { 
+  numCreated += OS_AddThread(&Display,128,1); 
+  while(NumSamples < RUNLENGTH - 32) { 
     PB4 = 0x10;
     for(t = 0; t < 64; t++){   // collect 64 ADC samples
       data = OS_Fifo_Get();    // get from producer - if we get stuck here then display may have been killed
@@ -228,7 +235,7 @@ unsigned long myId = OS_Id();
 		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
 	LEDS = RED;
-  OS_Kill();  // done
+  OS_Kill();  // never called
 }
 //******** Display *************** 
 // foreground thread, accepts data from consumer
@@ -239,7 +246,7 @@ void Display(void){
 unsigned long data,voltage;
 unsigned long myId2 = OS_Id(); 
   ST7735_Message(0,1,"Run length = ",(RUNLENGTH)/FS);   // top half used for Display
-  while(NumSamples < RUNLENGTH) { 
+  while(NumSamples < RUNLENGTH - 32) { 
     data = OS_MailBox_Recv();
     voltage = 3000*data/4095;               // calibrate your device so voltage is in mV
     PB5 = 0x20;
@@ -248,7 +255,7 @@ unsigned long myId2 = OS_Id();
 		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
 	LEDS = RED;
-  OS_Kill();  // done
+  OS_Kill();  // never called
 } 
 
 //--------------end of Task 3-----------------------------
@@ -297,7 +304,7 @@ int main(void){
   DataLost = 0;        // lost data between producer and consumer
   NumSamples = 0;
 	FilterWork = 0;
-  NumCreated = 0;
+  numCreated = 0;
 //********initialize communication channels
   OS_MailBox_Init();		
   OS_Fifo_Init(32);    // ***note*** 4 is not big enough*****
@@ -311,9 +318,9 @@ int main(void){
 	
 	//create initial foreground threads
 	
-	NumCreated += OS_AddThread(&Interpreter,128,5);
-	NumCreated += OS_AddThread(&Consumer,128,2); 
-  NumCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
+	numCreated += OS_AddThread(&Interpreter,128,5);
+	numCreated += OS_AddThread(&Consumer,128,2); 
+  numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
 	
 	/*
 	NumCreated += OS_AddThread(&PID,128,5); //not suck 

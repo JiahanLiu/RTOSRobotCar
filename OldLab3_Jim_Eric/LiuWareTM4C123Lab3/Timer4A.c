@@ -42,7 +42,8 @@ void Timer4A_Init(void(*task)(void), uint32_t period, uint32_t priority){
 // interrupts enabled in the main program after all devices initialized
 // vector number 35, interrupt number 19
   NVIC_EN2_R = 1<<(70 - 32 * 2);           // 9) enable IRQ 70 in NVIC
-  TIMER4_CTL_R = 0x00000001;    // 10) enable TIMER0A
+  TIMER4_CTL_R = 0x00000001 + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;    // 10) enable TIMER0A
+	TIMER4_CTL_R &= ~TIMER_CTL_RTCEN;//disable RTCEN
   EndCritical(sr);
 }
 void Timer4A_Handler(void){

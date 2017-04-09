@@ -28,6 +28,9 @@ void OutCRLF(void);
 //----- Global ------
 char uartString[MAX_UART_IN_LEN];  // UART puts string into here
 
+extern unsigned long numCreated;   // number of foreground threads created
+extern int numThreads;
+extern int debugBlocked;
 extern unsigned long NumSamples;
 extern Sema4Type mutexLCD;
 extern Sema4Type CurrentSize;
@@ -152,7 +155,7 @@ void ProcessCommand(){
 		case 'T':
 		case 't':
 			UART_OutString("num threads created: ");
-			UART_OutUDec(NumCreated); 
+			UART_OutUDec(numCreated); 
 			OutCRLF();
 	} //end switch
 }

@@ -33,6 +33,7 @@
 #include "../LiuWareTM4C123Lab3/PFEdgeTrigger.h"
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/OS.h"
+#include "../LiuWareTM4C123Lab3/LEDS.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -42,14 +43,7 @@ void WaitForInterrupt(void);  // low power mode
 void (*PF0Task)(void);   // user function
 void (*PF4Task)(void);   // user function
 
-//---------------- Debug Lights -------------------
-#define LEDS      (*((volatile uint32_t *)0x40025038))
-#define RED       0x02
-#define BLUE      0x04
-#define GREEN     0x08
-#define WHEELSIZE 8           // must be an integer multiple of 2	
-//const long COLORWHEEL[WHEELSIZE] = {RED, RED+GREEN, GREEN, GREEN+BLUE, BLUE, BLUE+RED, RED+GREEN+BLUE, 0};
-extern const long COLORWHEEL[WHEELSIZE];
+extern unsigned long numCreated;   // number of foreground threads created
 
 void NothingTask() {
 }
@@ -102,7 +96,7 @@ void GPIOPortF_Handler(void){
 		GPIO_PORTF_ICR_R |= 0x10;      // acknowledge flag4
 		if(OS_MsTime() > 250 && !bNothingAssignedToPF4){ // debounce
 			if(OS_AddThread(PF4Task,100,PF4Priority)){
-				NumCreated++; 
+				numCreated++; 
 			} else {
 				LEDS = RED;
 			}
@@ -114,7 +108,7 @@ void GPIOPortF_Handler(void){
 		GPIO_PORTF_ICR_R |= 0x01;      // acknowledge flag0		
 		if(OS_MsTime() > 250 && !bNothingAssignedToPF0){ // debounce
 			if(OS_AddThread(PF0Task,100,PF0Priority)){
-				NumCreated++; 
+				numCreated++; 
 			} else {
 				LEDS = RED;
 			}

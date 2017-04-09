@@ -30,6 +30,11 @@ void updateOSTime(void);
 #define NUMTHREADSPLUSONE (NUMTHREADS + 1)
 #define STACKSIZE 100
 
+extern unsigned long DataLost;     // data sent by Producer, but not received by Consumer
+extern unsigned long numCreated;   // number of foreground threads created
+extern int numThreads;
+extern int debugBlocked;
+
 //---------------- TCB ------------------- 
 tcbType tcbs[NUMTHREADS];
 tcbType *RunPt;
@@ -461,7 +466,9 @@ void OS_Fifo_Init(unsigned long size) {
 // Since this is called by interrupt handlers 
 //  this function can not disable or enable interrupts
 int OS_Fifo_Put(unsigned long data) {
-	if(CurrentSize.Value == FIFOSIZE) {
+	OS_Wait(&RoomLeft);
+	OS_Wait(&FIFOmutex);
+	if(CurrentSize.Value == FIFOSIZE) { //data loss recorder
 		LostData++;
 		return -1;
 	}
@@ -470,6 +477,7 @@ int OS_Fifo_Put(unsigned long data) {
 	if(PutPt == &Fifo[FIFOSIZE]) {
 		PutPt = &Fifo[0];
 	}
+	OS_Signal(&FIFOmutex);
 	OS_Signal(&CurrentSize);
 	return 0;
 }
@@ -489,6 +497,7 @@ unsigned long OS_Fifo_Get(void) {
 		GetPt = &Fifo[0];
 	}
 	OS_Signal(&FIFOmutex);
+	OS_Signal(&RoomLeft);
 	return data;
 }
 
@@ -515,7 +524,7 @@ Sema4Type mailAck;
 void OS_MailBox_Init(void) {
 	mailValue = 0;
 	mailSend.Value = 0;
-  mailAck.Value = 0; 
+  mailAck.Value = 1; 
 }
 
 // ******** OS_MailBox_Send ************
@@ -525,9 +534,9 @@ void OS_MailBox_Init(void) {
 // This function will be called from a foreground thread
 // It will spin/block if the MailBox contains data not yet received 
 void OS_MailBox_Send(unsigned long data) {
+	OS_Wait(&mailAck);
 	mailValue = data;
-	OS_Signal(&mailSend); 
-	OS_Wait(&mailAck); 
+	OS_Signal(&mailSend);  
 }
 
 // ******** OS_MailBox_Recv ************
