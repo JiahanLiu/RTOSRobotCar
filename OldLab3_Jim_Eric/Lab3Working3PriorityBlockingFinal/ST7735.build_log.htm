@@ -7,67 +7,79 @@ C:\Users\Admin\Documents\School\Junior 2\EE445M\ValvanoWareTM4C123\Heap_4C123\ro
 Project File Date:  04/08/2017
 
 <h2>Output:</h2>
-Rebuild target 'ST7735'
-compiling ST7735TestMain.c...
-compiling ADC.c...
-compiling IDQueue.c...
+Build target 'ST7735'
 compiling Interpreter.c...
-compiling OS.c...
-compiling PFEdgeTrigger.c...
-compiling PLL.c...
-compiling ST7735.c...
-compiling SysTickInts.c...
-compiling ThreadPriorityPQueue.c...
-compiling Timer0A.c...
-compiling Timer1.c...
-compiling Timer4A.c...
-compiling UART.c...
-assembling cr4_fft_64_stm32.s...
-assembling osasm.s...
-assembling PID_stm32.s...
-assembling startup.s...
-compiling LEDS.c...
+compiling ffWrapper.c...
 linking...
-Program Size: Code=14304 RO-data=2084 RW-data=392 ZI-data=6744  
+Program Size: Code=23592 RO-data=2052 RW-data=300 ZI-data=8404  
 ".\ST7735.axf" - 0 Error(s), 0 Warning(s).
 Load "C:\\Users\\Admin\\Documents\\School\\Junior 2\\EE445M\\ValvanoWareTM4C123\\Heap_4C123\\robot-lab6-7-ar47986_lk7236_jl57566_ecl625\\OldLab3_Jim_Eric\\Lab3Working3PriorityBlockingFinal\\ST7735.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-ash Download failed  -  Target DLL has been cancelled
-Load "C:\\Users\\Admin\\Documents\\School\\Junior 2\\EE445M\\ValvanoWareTM4C123\\Heap_4C123\\robot-lab6-7-ar47986_lk7236_jl57566_ecl625\\OldLab3_Jim_Eric\\Lab3Working3PriorityBlockingFinal\\ST7735.axf" 
-Connecting: Mode=JTAG, Speed=1000000Hz
-Erase Done.
-Programming Done.
-Verify OK.
-mbol numThreads multiply defined (by timer1.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by idqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by interpreter.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by os.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by pfedgetrigger.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by st7735.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by threadprioritypqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by timer0a.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol debugBlocked multiply defined (by timer1.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by idqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by interpreter.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by os.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by pfedgetrigger.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by st7735.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by threadprioritypqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by timer0a.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol DataLost multiply defined (by timer1.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by idqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by interpreter.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by os.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by pfedgetrigger.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by st7735.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by threadprioritypqueue.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by timer0a.o and st7735testmain.o).
-.\ST7735.axf: Error: L6200E: Symbol NumCreated multiply defined (by timer1.o and st7735testmain.o).
-Not enough information to list image symbols.
-Not enough information to list the image map.
-Finished: 2 information, 0 warning and 32 error messages.
-".\ST7735.axf" - 32 Error(s), 0 Warning(s).
+ompiling LEDS.c...
+compiling JimString.c...
+compiling diskio.c...
+compiling ff.c...
+compiling ffWrapper.c...
+..\LiuWareTM4C123Lab3\ffWrapper.c(28): error:  #20: identifier "Handle2" is undefined
+    Fresult = f_open(&Handle2, "testFile.txt", FA_CREATE_ALWAYS|FA_WRITE);
+..\LiuWareTM4C123Lab3\ffWrapper.c(49): error:  #20: identifier "Handle" is undefined
+    Fresult = f_open(&Handle, "testFile.txt", FA_READ);
+..\LiuWareTM4C123Lab3\ffWrapper.c: 0 warnings, 2 errors
+".\ST7735.axf" - 2 Error(s), 0 Warning(s).
+Target not created
+  #20: identifier "int16_t" is undefined
+  void ST7735_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(157): error:  #20: identifier "uint16_t" is undefined
+  void ST7735_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(169): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(169): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(169): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(169): error:  #20: identifier "uint16_t" is undefined
+  void ST7735_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(177): error:  #20: identifier "uint16_t" is undefined
+  void ST7735_FillScreen(uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(189): error:  #20: identifier "int16_t" is undefined
+  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(189): error:  #20: identifier "int16_t" is undefined
+  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(189): error:  #20: identifier "int16_t" is undefined
+  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(189): error:  #20: identifier "int16_t" is undefined
+  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(189): error:  #20: identifier "uint16_t" is undefined
+  void ST7735_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(198): error:  #20: identifier "uint16_t" is undefined
+  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
+  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
+  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(198): error:  #20: identifier "uint8_t" is undefined
+  uint16_t ST7735_Color565(uint8_t r, uint8_t g, uint8_t b);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(205): error:  #20: identifier "uint16_t" is undefined
+  uint16_t ST7735_SwapColor(uint16_t x) ;
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(205): error:  #20: identifier "uint16_t" is undefined
+  uint16_t ST7735_SwapColor(uint16_t x) ;
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(227): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(227): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(227): error:  #20: identifier "uint16_t" is undefined
+  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(227): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(227): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, int16_t h);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(244): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size);
+..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h(244): error:  #20: identifier "int16_t" is undefined
+  void ST7735_DrawCharS(int16_t x, int16_t y, char c, int16_t textColor, int16_t bgColor, uint8_t size);
+..\LiuWareTM4C123Lab3\ffWrapper.c: 0 warnings, 30 errors
+".\ST7735.axf" - 30 Error(s), 0 Warning(s).
 Target not created

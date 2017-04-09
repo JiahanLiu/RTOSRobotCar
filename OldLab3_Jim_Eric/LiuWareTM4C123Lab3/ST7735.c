@@ -1,12 +1,8 @@
-// ST7735.c
-// Driver for Liquid Display 
-// TA: Daniel  Leach
-
 /***************************************************
   This is a library for the Adafruit 1.8" SPI display.
   This library works with the Adafruit 1.8" TFT Breakout w/SD card
   ----> http://www.adafruit.com/products/358
-  as well as Adafruit raw 1.8" TFT displayun
+  as well as Adafruit raw 1.8" TFT display
   ----> http://www.adafruit.com/products/618
 
   Check out the links above for our tutorials and wiring diagrams
@@ -21,40 +17,77 @@
  ****************************************************/
 
 // ST7735.c
+// Runs on LM4F120/TM4C123
 // Low level drivers for the ST7735 160x128 LCD based off of
-// the file described above.
+// the file described above.  Further modified for simultaneous
+// use of the SD card (CS on PD7) and ST7735 LCD (CS on PA3).
 //    16-bit color, 128 wide by 160 high LCD
-// Jiahan Liu, Eric Li
-// March 30, 2015
+// Daniel Valvano
+// Feb 22, 2016
 // Augmented 7/17/2014 to have a simple graphics facility
 // Tested with LaunchPadDLL.dll simulator 9/2/2014
+// added PB0 as a choice for SDC CS
+
+
+/* This example accompanies the book
+   "Embedded Systems: Real Time Interfacing to ARM Cortex M Microcontrollers",
+   ISBN: 978-1463590154, Jonathan Valvano, copyright (c) 2016
+
+ Copyright 2016 by Jonathan W. Valvano, valvano@mail.utexas.edu
+    You may use, edit, run or distribute this file
+    as long as the above copyright notice remains
+ THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+ OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+ VALVANO SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL,
+ OR CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+ For more information about my classes, my research, and my books, see
+ http://users.ece.utexas.edu/~valvano/
+ */
 
 // hardware connections
 // **********ST7735 TFT and SDC*******************
 // ST7735
-// Backlight (pin 10) connected to +3.3 V (Looking at Black Screen - Right side)
-// MISO (pin 9) unconnected
+// Backlight (pin 10) connected to +3.3 V
+// MISO (pin 9) connected to PA4 (SSI0Rx)
 // SCK (pin 8) connected to PA2 (SSI0Clk)
 // MOSI (pin 7) connected to PA5 (SSI0Tx)
-// TFT_CS (pin 6) connected to PA3 (SSI0Fss)
-// CARD_CS (pin 5) unconnected
+// TFT_CS (pin 6) connected to PA3 (GPIO/SSI0Fss)
+// CARD_CS (pin 5) connected to PD7 or PB0 (GPIO)
 // Data/Command (pin 4) connected to PA6 (GPIO), high for data, low for command
 // RESET (pin 3) connected to PA7 (GPIO)
 // VCC (pin 2) connected to +3.3 V
-// Gnd (pin 1) connected to ground (Looking at Black Screen - Left side)
+// Gnd (pin 1) connected to ground
 
+// **********wide.hk ST7735R*******************
+// Silkscreen Label (SDC side up; LCD side down) - Connection
+// VCC  - +3.3 V
+// GND  - Ground
+// !SCL - PA2 Sclk SPI clock from microcontroller to TFT or SDC
+// !SDA - PA5 MOSI SPI data from microcontroller to TFT or SDC
+// DC   - PA6 TFT data/command
+// RES  - PA7 TFT reset
+// CS   - PA3 TFT_CS, active low to enable TFT
+// *CS  - PD7 or PB0 SDC_CS, active low to enable SDC
+// MISO - PA4 MISO SPI data from SDC to microcontroller
+// SDA  – (NC) I2C data for ADXL345 accelerometer
+// SCL  – (NC) I2C clock for ADXL345 accelerometer
+// SDO  – (NC) I2C alternate address for ADXL345 accelerometer
+// Backlight + - Light, backlight connected to +3.3 V
 
 #include <stdio.h>
 #include <stdint.h>
 #include "../LiuWareTM4C123Lab3/ST7735.h"
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/OS.h"
+#include "../LiuWareTM4C123Lab3/diskio.h"
 
 // 16 rows (0 to 15) and 21 characters (0 to 20)
 // Requires (11 + size*size*6*8) bytes of transmission for each character
 uint32_t StX=0; // position along the horizonal axis 0 to 20
 uint32_t StY=0; // position along the vertical axis 0 to 15
 uint16_t StTextColor = ST7735_YELLOW;
+
 
 // Start Lab 1 Added Defines - Jiahan Liu
 #define MIN_DISPLAY0_Y 0
@@ -129,15 +162,37 @@ Sema4Type mutexLCD;
 #define ST7735_GMCTRN1 0xE1
 
 #define TFT_CS                  (*((volatile uint32_t *)0x40004020))
-#define TFT_CS_LOW              0           // CS normally controlled by hardware
+#define TFT_CS_LOW              0           // CS controlled by software
 #define TFT_CS_HIGH             0x08
+#define SDC_CS           (*((volatile uint32_t *)0x40005004))
+#define SDC_CS_LOW       0           // CS controlled by software
+#define SDC_CS_HIGH      0x01
 #define DC                      (*((volatile uint32_t *)0x40004100))
 #define DC_COMMAND              0
 #define DC_DATA                 0x40
 #define RESET                   (*((volatile uint32_t *)0x40004200))
 #define RESET_LOW               0
 #define RESET_HIGH              0x80
-
+#define GPIO_PORTA_DIR_R        (*((volatile uint32_t *)0x40004400))
+#define GPIO_PORTA_AFSEL_R      (*((volatile uint32_t *)0x40004420))
+#define GPIO_PORTA_PUR_R        (*((volatile uint32_t *)0x40004510))
+#define GPIO_PORTA_DEN_R        (*((volatile uint32_t *)0x4000451C))
+#define GPIO_PORTA_AMSEL_R      (*((volatile uint32_t *)0x40004528))
+#define GPIO_PORTA_PCTL_R       (*((volatile uint32_t *)0x4000452C))
+#define GPIO_PORTD_DIR_R        (*((volatile uint32_t *)0x40007400))
+#define GPIO_PORTD_AFSEL_R      (*((volatile uint32_t *)0x40007420))
+#define GPIO_PORTD_PUR_R        (*((volatile uint32_t *)0x40007510))
+#define GPIO_PORTD_DEN_R        (*((volatile uint32_t *)0x4000751C))
+#define GPIO_PORTD_LOCK_R       (*((volatile uint32_t *)0x40007520))
+#define GPIO_PORTD_CR_R         (*((volatile uint32_t *)0x40007524))
+#define GPIO_PORTD_AMSEL_R      (*((volatile uint32_t *)0x40007528))
+#define GPIO_PORTD_PCTL_R       (*((volatile uint32_t *)0x4000752C))
+#define SSI0_CR0_R              (*((volatile uint32_t *)0x40008000))
+#define SSI0_CR1_R              (*((volatile uint32_t *)0x40008004))
+#define SSI0_DR_R               (*((volatile uint32_t *)0x40008008))
+#define SSI0_SR_R               (*((volatile uint32_t *)0x4000800C))
+#define SSI0_CPSR_R             (*((volatile uint32_t *)0x40008010))
+#define SSI0_CC_R               (*((volatile uint32_t *)0x40008FC8))
 #define SSI_CR0_SCR_M           0x0000FF00  // SSI Serial Clock Rate
 #define SSI_CR0_SPH             0x00000080  // SSI Serial Clock Phase
 #define SSI_CR0_SPO             0x00000040  // SSI Serial Clock Polarity
@@ -149,16 +204,23 @@ Sema4Type mutexLCD;
 #define SSI_CR1_SSE             0x00000002  // SSI Synchronous Serial Port
                                             // Enable
 #define SSI_SR_BSY              0x00000010  // SSI Busy Bit
-#define SSI_SR_TNF              0x00000002  // SSI Transmit FIFO Not Full
+#define SSI_SR_RNE              0x00000004  // SSI Receive FIFO Not Empty
 #define SSI_CPSR_CPSDVSR_M      0x000000FF  // SSI Clock Prescale Divisor
 #define SSI_CC_CS_M             0x0000000F  // SSI Baud Clock Source
-#define SSI_CC_CS_SYSPLL        0x00000000  // Either the system clock (if the
-                                            // PLL bypass is in effect) or the
-                                            // PLL output (default)
-#define SYSCTL_RCGC1_SSI0       0x00000010  // SSI0 Clock Gating Control
-#define SYSCTL_RCGC2_GPIOA      0x00000001  // port A Clock Gating Control
-#define ST7735_TFTWIDTH  128
-#define ST7735_TFTHEIGHT 160
+#define SSI_CC_CS_PIOSC         0x00000005  // PIOSC
+#define SYSCTL_RCGCGPIO_R       (*((volatile uint32_t *)0x400FE608))
+#define SYSCTL_RCGCGPIO_R3      0x00000008  // GPIO Port D Run Mode Clock
+                                            // Gating Control
+#define SYSCTL_RCGCGPIO_R0      0x00000001  // GPIO Port A Run Mode Clock
+                                            // Gating Control
+#define SYSCTL_RCGCSSI_R        (*((volatile uint32_t *)0x400FE61C))
+#define SYSCTL_RCGCSSI_R0       0x00000001  // SSI Module 0 Run Mode Clock
+                                            // Gating Control
+#define SYSCTL_PRGPIO_R         (*((volatile uint32_t *)0x400FEA08))
+#define SYSCTL_PRGPIO_R3        0x00000008  // GPIO Port D Peripheral Ready
+#define SYSCTL_PRGPIO_R0        0x00000001  // GPIO Port A Peripheral Ready
+#define SYSCTL_PRSSI_R          (*((volatile uint32_t *)0x400FEA1C))
+#define SYSCTL_PRSSI_R0         0x00000001  // SSI Module 0 Peripheral Ready
 
 #define ST7735_NOP     0x00
 #define ST7735_SWRESET 0x01
@@ -476,49 +538,83 @@ static int16_t _height = ST7735_TFTHEIGHT;
 
 // The Data/Command pin must be valid when the eighth bit is
 // sent.  The SSI module has hardware input and output FIFOs
-// that are 8 locations deep.  Based on the observation that
-// the LCD interface tends to send a few commands and then a
-// lot of data, the FIFOs are not used when writing
-// commands, and they are used when writing data.  This
-// ensures that the Data/Command pin status matches the byte
-// that is actually being transmitted.
-// The write command operation waits until all data has been
-// sent, configures the Data/Command pin for commands, sends
-// the command, and then waits for the transmission to
-// finish.
-// The write data operation waits until there is room in the
-// transmit FIFO, configures the Data/Command pin for data,
-// and then adds the data to the transmit FIFO.
+// that are 8 locations deep; however, they are not used in
+// this implementation.  Each function first stalls while
+// waiting for any pending SSI0 transfers to complete.  Once
+// the SSI0 module is idle, it then prepares the Chip Select
+// pins for the SD card and LCD and the Data/Command pin.
+// Next it starts transmitting the data or command.  Finally
+// once the hardware is idle again, it sets all chip select
+// pins high as required by the serial protocol.  This is a
+// significant change from previous implementations of this
+// function.  It is less efficient without the FIFOs, but it
+// should ensure that the Chip Select and Data/Command pin
+// statuses all match the byte that is actually being
+// transmitted.
 // NOTE: These functions will crash or stall indefinitely if
 // the SSI0 module is not initialized and enabled.
-void static writecommand(uint8_t c) {
+void static writecommand(unsigned char c) {
+  volatile uint32_t response;
                                         // wait until SSI0 not busy/transmit FIFO empty
   while((SSI0_SR_R&SSI_SR_BSY)==SSI_SR_BSY){};
+  SDC_CS = SDC_CS_HIGH;
+  TFT_CS = TFT_CS_LOW;
   DC = DC_COMMAND;
   SSI0_DR_R = c;                        // data out
+  while((SSI0_SR_R&SSI_SR_RNE)==0){};   // wait until response
+  TFT_CS = TFT_CS_HIGH;
+  response = SSI0_DR_R;                 // acknowledge response
+}
+
+
+void static writedata(unsigned char c) {
+  volatile uint32_t response;
                                         // wait until SSI0 not busy/transmit FIFO empty
   while((SSI0_SR_R&SSI_SR_BSY)==SSI_SR_BSY){};
-}
-
-
-void static writedata(uint8_t c) {
-  while((SSI0_SR_R&SSI_SR_TNF)==0){};   // wait until transmit FIFO not full
+  SDC_CS = SDC_CS_HIGH;
+  TFT_CS = TFT_CS_LOW;
   DC = DC_DATA;
   SSI0_DR_R = c;                        // data out
+  while((SSI0_SR_R&SSI_SR_RNE)==0){};   // wait until response
+  TFT_CS = TFT_CS_HIGH;
+  response = SSI0_DR_R;                 // acknowledge response
 }
+
+
+// delay function from sysctl.c
+// which delays 3*ulCount cycles
+#ifdef __TI_COMPILER_VERSION__
+  //Code Composer Studio Code
+  void Delay(uint32_t ulCount){
+  __asm (  "    subs    r0, #1\n"
+      "    bne     Delay\n"
+      "    bx      lr\n");
+}
+
+#else
+  //Keil uVision Code
+  __asm void
+  Delay(uint32_t ulCount)
+  {
+    subs    r0, #1
+    bne     Delay
+    bx      lr
+  }
+
+#endif
+
+
 // Subroutine to wait 1 msec
 // Inputs: None
 // Outputs: None
-// Notes: ...
-void Delay1ms(uint32_t n){uint32_t volatile time;
+// Notes: This assumes 80 MHz system clock.
+void Delay1ms(uint32_t n){
   while(n){
-    time = 72724*2/91;  // 1msec, tuned at 80 MHz
-    while(time){
-      time--;
-    }
+    Delay(26667);
     n--;
   }
 }
+
 
 // Rather than a bazillion writecommand() and writedata() calls, screen
 // initialization commands and arguments are organized in these tables
@@ -687,15 +783,18 @@ void static commandList(const uint8_t *addr) {
 
 // Initialization code common to both 'B' and 'R' type displays
 void static commonInit(const uint8_t *cmdList) {
-  volatile uint32_t delay;
   ColStart  = RowStart = 0; // May be overridden in init func
-
-  SYSCTL_RCGCSSI_R |= 0x01;  // activate SSI0
-  SYSCTL_RCGCGPIO_R |= 0x01; // activate port A
-  while((SYSCTL_PRGPIO_R&0x01)==0){}; // allow time for clock to start
+                                        // activate clock for Port A
+  SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0;
+                                        // allow time for clock to stabilize
+  while((SYSCTL_PRGPIO_R&SYSCTL_PRGPIO_R0) == 0){};
+                                        // activate clock for SSI0
+  SYSCTL_RCGCSSI_R |= SYSCTL_RCGCSSI_R0;
+                                        // allow time for clock to stabilize
+  while((SYSCTL_PRSSI_R&SYSCTL_PRSSI_R0) == 0){};
 
   // toggle RST low to reset; CS low so it'll listen to us
-  // SSI0Fss is temporarily used as GPIO
+  // SSI0Fss is used as GPIO
   GPIO_PORTA_DIR_R |= 0xC8;             // make PA3,6,7 out
   GPIO_PORTA_AFSEL_R &= ~0xC8;          // disable alt funct on PA3,6,7
   GPIO_PORTA_DEN_R |= 0xC8;             // enable digital I/O on PA3,6,7
@@ -711,21 +810,35 @@ void static commonInit(const uint8_t *cmdList) {
   Delay1ms(500);
 
   // initialize SSI0
-  GPIO_PORTA_AFSEL_R |= 0x2C;           // enable alt funct on PA2,3,5
-  GPIO_PORTA_DEN_R |= 0x2C;             // enable digital I/O on PA2,3,5
-                                        // configure PA2,3,5 as SSI
-  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF0F00FF)+0x00202200;
-  GPIO_PORTA_AMSEL_R &= ~0x2C;          // disable analog functionality on PA2,3,5
-  SSI0_CR1_R &= ~SSI_CR1_SSE;           // disable SSI
+  GPIO_PORTA_AFSEL_R |= 0x34;           // enable alt funct on PA2,4,5
+  GPIO_PORTA_PUR_R |= 0x3C;             // enable weak pullup on PA2,3,4,5
+  GPIO_PORTA_DEN_R |= 0x34;             // enable digital I/O on PA2,4,5
+                                        // configure PA2,4,5 as SSI
+  GPIO_PORTA_PCTL_R = (GPIO_PORTA_PCTL_R&0xFF00F0FF)+0x00220200;
+  GPIO_PORTA_AMSEL_R &= ~0x34;          // disable analog functionality on PA2,4,5
+                                        
+	//start lab 5 changes
+	SYSCTL_RCGCGPIO_R |= 0x02;            // activate clock for Port B
+  while((SYSCTL_PRGPIO_R&0x02) == 0){}; // allow time for clock to stabilize
+  GPIO_PORTB_DIR_R |= 0x01;             // make PB0 out
+  GPIO_PORTB_AFSEL_R &= ~0x01;          // disable alt funct on PB0
+  GPIO_PORTB_DR4R_R |= 0x01;            // 4mA drive on outputs
+  GPIO_PORTB_PUR_R |= 0x01;             // enable weak pullup on PB0
+  GPIO_PORTB_DEN_R |= 0x01;             // enable digital I/O on PB0
+                                        // configure PB0 as GPIO
+  GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R&0xFFFFFFF0)+0x00000000;
+  GPIO_PORTB_AMSEL_R &= ~0x01;          // disable analog functionality on PB0
+  SDC_CS = SDC_CS_HIGH;
+  //-end lab 5 changes
+	
+	SSI0_CR1_R &= ~SSI_CR1_SSE;           // disable SSI
   SSI0_CR1_R &= ~SSI_CR1_MS;            // master mode
-                                        // configure for system clock/PLL baud clock source
-  SSI0_CC_R = (SSI0_CC_R&~SSI_CC_CS_M)+SSI_CC_CS_SYSPLL;
-//                                        // clock divider for 3.125 MHz SSIClk (50 MHz PIOSC/16)
-//  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+16;
-                                        // clock divider for 8 MHz SSIClk (80 MHz PLL/24)
-                                        // SysClk/(CPSDVSR*(1+SCR))
-                                        // 80/(10*(1+0)) = 8 MHz (slower than 4 MHz)
-  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+10; // must be even number
+                                        // configure for clock from source PIOSC for baud clock source
+  SSI0_CC_R = (SSI0_CC_R&~SSI_CC_CS_M)+SSI_CC_CS_PIOSC;
+                                        // clock divider for 8 MHz SSIClk (16 MHz PIOSC/2)
+                                        // PIOSC/(CPSDVSR*(1+SCR))
+                                        // 16/(2*(1+0)) = 8 MHz
+  SSI0_CPSR_R = (SSI0_CPSR_R&~SSI_CPSR_CPSDVSR_M)+2; // must be even number
   SSI0_CR0_R &= ~(SSI_CR0_SCR_M |       // SCR = 0 (8 Mbps data rate)
                   SSI_CR0_SPH |         // SPH = 0
                   SSI_CR0_SPO);         // SPO = 0
@@ -824,8 +937,7 @@ void ST7735_DrawPixel(int16_t x, int16_t y, uint16_t color) {
 
   if((x < 0) || (x >= _width) || (y < 0) || (y >= _height)) return;
 
-//  setAddrWindow(x,y,x+1,y+1); // original code, bug???
-  setAddrWindow(x,y,x,y);
+  setAddrWindow(x,y,x,y);  // ST7735_DrawPixel bug fixed 9/2/2014
 
   pushColor(color);
 }
@@ -1509,7 +1621,7 @@ void ST7735_PlotNextErase(void){
 // Inputs: 8-bit ASCII character
 // Outputs: none
 void ST7735_OutChar(char ch){
-  if((ch == 10) || (ch == 13) || (ch == 27)){ //cariage return?
+  if((ch == 10) || (ch == 13) || (ch == 27)){
     StY++; StX=0;
     if(StY>15){
       StY = 0;
@@ -1538,7 +1650,6 @@ void ST7735_OutString(char *ptr){
     ptr = ptr + 1;
   }
 }
-
 // ************** ST7735_SetTextColor ************************
 // Sets the color in which the characters will be printed
 // Background color is fixed at black

@@ -416,6 +416,11 @@
               <FilePath>..\LiuWareTM4C123Lab3\ADC.c</FilePath>
             </File>
             <File>
+              <FileName>IDQueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\IDQueue.c</FilePath>
+            </File>
+            <File>
               <FileName>Interpreter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\Interpreter.c</FilePath>
@@ -424,6 +429,11 @@
               <FileName>OS.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\OS.c</FilePath>
+            </File>
+            <File>
+              <FileName>PFEdgeTrigger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\PFEdgeTrigger.c</FilePath>
             </File>
             <File>
               <FileName>PLL.c</FileName>
@@ -441,9 +451,19 @@
               <FilePath>..\LiuWareTM4C123Lab3\SysTickInts.c</FilePath>
             </File>
             <File>
+              <FileName>ThreadPriorityPQueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\ThreadPriorityPQueue.c</FilePath>
+            </File>
+            <File>
               <FileName>Timer0A.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\Timer0A.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\Timer1.c</FilePath>
             </File>
             <File>
               <FileName>Timer4A.c</FileName>
@@ -456,14 +476,9 @@
               <FilePath>..\LiuWareTM4C123Lab3\UART.c</FilePath>
             </File>
             <File>
-              <FileName>startup.s</FileName>
+              <FileName>cr4_fft_64_stm32.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\startup.s</FilePath>
-            </File>
-            <File>
-              <FileName>PID_stm32.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\PID_stm32.s</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s</FilePath>
             </File>
             <File>
               <FileName>osasm.s</FileName>
@@ -471,29 +486,24 @@
               <FilePath>..\LiuWareTM4C123Lab3\osasm.s</FilePath>
             </File>
             <File>
-              <FileName>cr4_fft_64_stm32.s</FileName>
+              <FileName>PID_stm32.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\PID_stm32.s</FilePath>
             </File>
             <File>
-              <FileName>PFEdgeTrigger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\PFEdgeTrigger.c</FilePath>
+              <FileName>startup.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\startup.s</FilePath>
             </File>
             <File>
-              <FileName>Timer1.c</FileName>
+              <FileName>LEDS.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\Timer1.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\LEDS.c</FilePath>
             </File>
             <File>
-              <FileName>IDPriorityQueue.c</FileName>
+              <FileName>JimString.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\IDPriorityQueue.c</FilePath>
-            </File>
-            <File>
-              <FileName>PriorityPriorityQueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\PriorityPriorityQueue.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\JimString.c</FilePath>
             </File>
           </Files>
         </Group>

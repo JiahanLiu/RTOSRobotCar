@@ -6,3 +6,5 @@
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/Interpreter.h
+.\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/JimString.h
+.\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/ffWrapper.h

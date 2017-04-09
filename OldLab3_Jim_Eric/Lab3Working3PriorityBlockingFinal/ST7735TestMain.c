@@ -70,7 +70,6 @@ int debugBlocked = 0;
 // outputs: none
 
 void Interpreter(void) { //lab 1 thread				
-	UART_Init();
 	UART_OutString("Hello Lab 6.0.0");
 	OutCRLF();
 	while(1) {
@@ -234,7 +233,7 @@ unsigned long myId = OS_Id();
     OS_MailBox_Send(DCcomponent); // called every 2.5ms*64 = 160ms
 		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
-	LEDS = RED;
+	//LEDS = RED;
   OS_Kill();  // never called
 }
 //******** Display *************** 
@@ -254,7 +253,7 @@ unsigned long myId2 = OS_Id();
     PB5 = 0x00;
 		//LEDS = COLORWHEEL[(wheelCounter++) % WHEELSIZE];
   }
-	LEDS = RED;
+	//LEDS = RED;
   OS_Kill();  // never called
 } 
 
@@ -292,6 +291,12 @@ unsigned long myId = OS_Id();
 		PB3 ^= 0x08;
 	}          // done
 }
+
+void postLauntInits() {
+	UART_Init();
+	OS_Kill();
+}
+
 //--------------end of Task 4-----------------------------
 
 //*******************final user main DEMONTRATE THIS TO TA**********
@@ -318,6 +323,7 @@ int main(void){
 	
 	//create initial foreground threads
 	
+	numCreated += OS_AddThread(&postLauntInits,128,1);
 	numCreated += OS_AddThread(&Interpreter,128,5);
 	numCreated += OS_AddThread(&Consumer,128,2); 
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority

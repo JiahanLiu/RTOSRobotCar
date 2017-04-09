@@ -9,8 +9,8 @@
 #include "../LiuWareTM4C123Lab3/OS.h"
 #include "../LiuWareTM4C123Lab3/ADC.h"
 #include "../LiuWareTm4C123Lab3/Interpreter.h"
-
-#define NULLCHAR '\0'
+#include "../LiuWareTm4C123Lab3/JimString.h"
+#include "../LiuWareTm4C123Lab3/ffWrapper.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -77,33 +77,7 @@ void ProcessCommand(){
 			break;
 		case 'D':
 		case 'd':
-			UART_OutString("RUNLENGTH ");
-			UART_OutUDec(RUNLENGTH); 
-			OutCRLF();
-					UART_OutString("NumSamples ");
-			UART_OutUDec(NumSamples); 
-			OutCRLF();
-			UART_OutString("debugBlocked ");
-			UART_OutUDec(debugBlocked); 
-			OutCRLF();
-			UART_OutString("mutexLCD ");
-			UART_OutUDec(mutexLCD.Value); 
-			OutCRLF();
-			UART_OutString("CurrentSize ");
-			UART_OutUDec(CurrentSize.Value); 
-			OutCRLF();
-		UART_OutString("RoomLeft ");
-			UART_OutUDec(RoomLeft.Value); 
-			OutCRLF();
-		UART_OutString("FIFOmutex ");
-			UART_OutUDec(FIFOmutex.Value); 
-			OutCRLF();
-		UART_OutString("mailSend ");
-			UART_OutUDec(mailSend.Value); 
-			OutCRLF();
-		UART_OutString("mailAck ");
-			UART_OutUDec(mailAck.Value); 
-			OutCRLF();
+			numCreated += OS_AddThread(&FileSystemTest,128,1);
 			break;
 		/* Case H */ 
 		case 'H':
@@ -158,49 +132,4 @@ void ProcessCommand(){
 			UART_OutUDec(numCreated); 
 			OutCRLF();
 	} //end switch
-}
-
-/***************** StringToInt **************
-* Input: string and length of string
-* Output: int version of string
-*/
-int StringToInt(char * stringNum, int len) {
-	int i, dec = 0; 
-	for(i=0; i<len; i++){
-		dec = dec * 10 + ( stringNum[i] - '0' );
-	}
-	return dec; 
-}
-
-/***************** strLengthByNullCount **************
-* Input: string
-* Output: length of string or the logical count of characters before null
-*/
-int strLengthByNullCount(char * stringNum) {
-	int i = 0;
-	while (*(stringNum + i) != NULLCHAR) {
-		i++;
-	}
-	return i; 
-}
-
-/***************** strLengthBySpaceCount **************
-* Input: string
-* Output: length of word or the logical count of characters before space
-*/
-int strLengthBySpaceCount(char * stringNum) {
-	int i = 0;
-	while (*(stringNum + i) != ' ') {
-		i++; 
-	}
-	return i; 
-}
-
-//---------------------OutCRLF---------------------
-// Output a CR,LF to UART to go to a new line
-// Input: none
-// Output: none
-void OutCRLF(void){
-  UART_OutChar(CR);
-  UART_OutChar(LF);
 }
