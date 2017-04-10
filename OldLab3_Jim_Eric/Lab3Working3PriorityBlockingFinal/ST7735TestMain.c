@@ -42,7 +42,7 @@ void WaitForInterrupt(void);  // low power mode
 void PortB_Init(void); 
 
 #define FS 400              // producer/consumer sampling
-#define RUNLENGTH (5 * FS )   // display results and quit when NumSamples==RUNLENGTH
+#define RUNLENGTH (20 * FS )   // display results and quit when NumSamples==RUNLENGTH
 //#define FS 5
 //#define RUNLENGTH (10)   // display results and quit when NumSamples==RUNLENGTH
 
