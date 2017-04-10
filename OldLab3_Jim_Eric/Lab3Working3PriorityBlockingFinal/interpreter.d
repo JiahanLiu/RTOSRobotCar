@@ -8,3 +8,4 @@
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/Interpreter.h
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/JimString.h
 .\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/ffWrapper.h
+.\interpreter.o: ..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/Filter.h

@@ -11,6 +11,7 @@
 #include "../LiuWareTm4C123Lab3/Interpreter.h"
 #include "../LiuWareTm4C123Lab3/JimString.h"
 #include "../LiuWareTm4C123Lab3/ffWrapper.h"
+#include "../LiuWareTm4C123Lab3/Filter.h"
 
 void DisableInterrupts(void); // Disable interrupts
 void EnableInterrupts(void);  // Enable interrupts
@@ -63,12 +64,27 @@ void ProcessCommand(){
 		/* Case A */
 		case 'A':
 		case 'a':
-			if(uartString[3] == 'S' || uartString[3] == 's') {
+			//if(uartString[3] == 'S' || uartString[3] == 's') {
 				adcChannel = StringToInt(uartString+13, strLengthByNullCount(uartString+13)); 
+				adcChannel = 4;
+				
+				unsigned long lock = OS_LockScheduler();
 				ADC_Init(adcChannel);
-				UART_OutUDec(ADC_In());
+				int result[100];
+				for(int i = 0; i < 100; i++) {
+					int tempMeasurement = ADC_In();
+					result[i] = tempMeasurement; 
+				}
+				OS_UnLockScheduler(lock);
+				for(int i = 0; i < 100; i++) {
+					UART_OutUDec(result[i]);
+					OutCRLF();
+				}
+				UART_OutString("Median: ");
+				OutCRLF();
+				UART_OutUDec(Median(result[0], result[1], result[2]));
 				OutCRLF();				
-			}
+			//}
 			break; 	
 		/* Case C */
 		case 'C':

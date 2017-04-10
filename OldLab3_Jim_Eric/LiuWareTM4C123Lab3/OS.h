@@ -293,4 +293,7 @@ unsigned long OS_MsTime(void);
 // It is ok to limit the range of theTimeSlice to match the 24-bit SysTick
 void OS_Launch(unsigned long theTimeSlice);
 
+unsigned long OS_LockScheduler(void);
+
+void OS_UnLockScheduler(unsigned long previous);
 #endif

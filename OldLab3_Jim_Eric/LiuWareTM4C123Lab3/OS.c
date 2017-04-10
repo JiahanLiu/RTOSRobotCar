@@ -616,6 +616,19 @@ void OS_Launch(unsigned long theTimeSlice) {
   StartOS();                   // start on the first task
 }
 
+long lockCritical = 0;
+unsigned long OS_LockScheduler(void){
+  unsigned long old = NVIC_ST_CTRL_R;
+  NVIC_ST_CTRL_R = NVIC_ST_CTRL_ENABLE+NVIC_ST_CTRL_CLK_SRC;
+	//lockCritical = StartCritical();
+  return old;
+}
+
+void OS_UnLockScheduler(unsigned long previous){
+  NVIC_ST_CTRL_R = previous;
+	//EndCritical(lockCritical);
+}
+
 void HardFault_Handler(void){
 	LEDS = BLUE; 
 }

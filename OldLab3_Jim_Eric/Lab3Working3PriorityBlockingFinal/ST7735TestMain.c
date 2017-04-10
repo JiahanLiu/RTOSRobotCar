@@ -26,6 +26,7 @@
 #include "../LiuWareTm4C123Lab3/Interpreter.h"
 #include "../LiuWareTm4C123Lab3/Timer0A.h"
 #include "../LiuWareTM4C123Lab3/LEDS.h" 
+#include "../LiuWareTM4C123Lab3/Filter.h" 
 
 #define PB2  (*((volatile unsigned long *)0x40005010))
 #define PB3  (*((volatile unsigned long *)0x40005020))
@@ -42,7 +43,7 @@ void WaitForInterrupt(void);  // low power mode
 void PortB_Init(void); 
 
 #define FS 400              // producer/consumer sampling
-#define RUNLENGTH (20 * FS )   // display results and quit when NumSamples==RUNLENGTH
+#define RUNLENGTH (2000 * FS )   // display results and quit when NumSamples==RUNLENGTH
 //#define FS 5
 //#define RUNLENGTH (10)   // display results and quit when NumSamples==RUNLENGTH
 
@@ -71,8 +72,6 @@ int debugBlocked = 0;
 // outputs: none
 
 void Interpreter(void) { //lab 1 thread				
-	UART_OutString("Hello Lab 6.0.0");
-	OutCRLF();
 	while(1) {
 		ProcessCommand();
 		PB5 ^= 0x20;
@@ -200,12 +199,30 @@ void SW2Push(void){
 // sends data to the consumer, runs periodically at 400Hz
 // inputs:  none
 // outputs: none
+int result[3];
 void Producer(unsigned long data){  
   if(NumSamples < RUNLENGTH){   // finite time run
     NumSamples++;               // number of samples
     if(OS_Fifo_Put(data) == -1){ // send to consumer
       DataLost++;
-    } 
+    }
+		//if(NumSamples < 4) {
+			//UART_OutUDec(data);
+			//OutCRLF();
+			if(NumSamples % 3 == 1) {
+				result[0] = data;
+			}
+			if(NumSamples % 3 == 2) {
+				result[1] = data;
+			}
+			if(NumSamples % 3 == 0){
+				result[2] = data;
+				//UART_OutString("Median: ");
+				//OutCRLF();
+				UART_OutUDec(20000/Median(result[0], result[1], result[2])); //accurate for close distances
+				OutCRLF();
+			}
+		//}
   } 
 }
 void Display(void); 
@@ -295,6 +312,8 @@ unsigned long myId = OS_Id();
 
 void postLauntInits() {
 	UART_Init();
+	UART_OutString("Hello Lab 6.0.1");
+	OutCRLF();
 	OS_Kill();
 }
 
@@ -316,16 +335,16 @@ int main(void){
   OS_Fifo_Init(32);    // ***note*** 4 is not big enough*****
 
 //*******attach background tasks***********
-  OS_AddSW1Task(&SW1Push,2); //not stuck
-  OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
+  //OS_AddSW1Task(&SW1Push,2); //not stuck
+  //OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
 
-  ADC_Init(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
-  OS_AddPeriodicThread(&DAS,PERIOD,0); // 2 kHz real time sampling of PD3 -> input = ADC_In(); 
+  //ADC_Init(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
+  //OS_AddPeriodicThread(&DAS,PERIOD,0); // 2 kHz real time sampling of PD3 -> input = ADC_In(); 
 	
 	//create initial foreground threads
 	
 	numCreated += OS_AddThread(&postLauntInits,128,1);
-	numCreated += OS_AddThread(&Interpreter,128,5);
+	//numCreated += OS_AddThread(&Interpreter,128,5);
 	numCreated += OS_AddThread(&Consumer,128,2); 
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
 	

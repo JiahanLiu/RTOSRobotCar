@@ -1,9 +1,9 @@
 Dependencies for Project 'lab1', Target 'ST7735': (DO NOT MODIFY !)
-F (.\ST7735TestMain.c)(0x58EBEC16)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\st7735testmain.o --omf_browse .\st7735testmain.crf --depend .\st7735testmain.d)
+F (.\ST7735TestMain.c)(0x58EC022C)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\st7735testmain.o --omf_browse .\st7735testmain.crf --depend .\st7735testmain.d)
 I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (../LiuWareTM4C123Lab3/PLL.h)(0x589E3CD6)
-I (../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
 I (../LiuWareTM4C123Lab3/ST7735.h)(0x58E9B382)
 I (../LiuWareTM4C123Lab3/UART.h)(0x58E9A4B2)
@@ -11,6 +11,7 @@ I (../LiuWareTm4C123Lab3/ADC.h)(0x58D33627)
 I (../LiuWareTm4C123Lab3/Interpreter.h)(0x58E956C3)
 I (../LiuWareTm4C123Lab3/Timer0A.h)(0x58D41F6B)
 I (../LiuWareTM4C123Lab3/LEDS.h)(0x58E95B78)
+I (../LiuWareTM4C123Lab3/Filter.h)(0x58EBF801)
 F (..\LiuWareTM4C123Lab3\ADC.c)(0x58E996D8)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\adc.o --omf_browse .\adc.crf --depend .\adc.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
@@ -18,22 +19,23 @@ I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/UART.h)(0x58E9A4B2)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h)(0x58D33627)
 F (..\LiuWareTM4C123Lab3\IDQueue.c)(0x58E95168)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\idqueue.o --omf_browse .\idqueue.crf --depend .\idqueue.d)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/IDQueue.h)(0x58E9564F)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
-F (..\LiuWareTM4C123Lab3\Interpreter.c)(0x58E9B3DC)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\interpreter.o --omf_browse .\interpreter.crf --depend .\interpreter.d)
+F (..\LiuWareTM4C123Lab3\Interpreter.c)(0x58EBF9BB)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\interpreter.o --omf_browse .\interpreter.crf --depend .\interpreter.d)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h)(0x58E9B382)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/UART.h)(0x58E9A4B2)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h)(0x58D33627)
 I (..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/Interpreter.h)(0x58E956C3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/JimString.h)(0x58E9A422)
 I (..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/ffWrapper.h)(0x58E9B3E5)
-F (..\LiuWareTM4C123Lab3\OS.c)(0x58E964DB)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\os.o --omf_browse .\os.crf --depend .\os.d)
+I (..\LiuWareTM4C123Lab3\../LiuWareTm4C123Lab3/Filter.h)(0x58EBF801)
+F (..\LiuWareTM4C123Lab3\OS.c)(0x58EBF1BD)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\os.o --omf_browse .\os.crf --depend .\os.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PLL.h)(0x589E3CD6)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer4A.h)(0x589A032A)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer0A.h)(0x58D41F6B)
@@ -47,7 +49,7 @@ F (..\LiuWareTM4C123Lab3\PFEdgeTrigger.c)(0x58E9614A)(-c --cpu Cortex-M4 -D__MIC
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PFEdgeTrigger.h)(0x58BE4104)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/LEDS.h)(0x58E95B78)
 F (..\LiuWareTM4C123Lab3\PLL.c)(0x58E94D04)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
@@ -58,7 +60,7 @@ I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h)(0x58E9B382)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/diskio.h)(0x58E9B08B)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/../LiuWareTM4C123Lab3/integer.h)(0x58E3AE5F)
 F (..\LiuWareTM4C123Lab3\SysTickInts.c)(0x58D865E7)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\systickints.o --omf_browse .\systickints.crf --depend .\systickints.d)
@@ -67,17 +69,17 @@ I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/SysTickInts.h)(0x589E3CD2)
 F (..\LiuWareTM4C123Lab3\ThreadPriorityPQueue.c)(0x58E95137)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\threadprioritypqueue.o --omf_browse .\threadprioritypqueue.crf --depend .\threadprioritypqueue.d)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h)(0x58E95184)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 F (..\LiuWareTM4C123Lab3\Timer0A.c)(0x58E99CE4)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\timer0a.o --omf_browse .\timer0a.crf --depend .\timer0a.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h)(0x588EFD8E)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer0A.h)(0x58D41F6B)
 F (..\LiuWareTM4C123Lab3\Timer1.c)(0x58E99CEC)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\timer1.o --omf_browse .\timer1.crf --depend .\timer1.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\..\..\../inc/tm4c123gh6pm.h)(0x588EFD8E)
-I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58E95F59)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h)(0x58EBF1E3)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer1.h)(0x58C21B70)
 F (..\LiuWareTM4C123Lab3\Timer4A.c)(0x58E9A2F0)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\timer4a.o --omf_browse .\timer4a.crf --depend .\timer4a.d)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
@@ -113,3 +115,6 @@ I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/../LiuWareTM4C123Lab3/ffconf.h)(0
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h)(0x58E9B382)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
 I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/LEDS.h)(0x58E95B78)
+F (..\LiuWareTM4C123Lab3\Filter.c)(0x58EBF765)(-c --cpu Cortex-M4 -D__MICROLIB -g -O0 --apcs=interwork --split_sections --signed_chars -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\Luminary-Drvmdk -DPART_LM4F120H5QR-o .\filter.o --omf_browse .\filter.crf --depend .\filter.d)
+I (..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Filter.h)(0x58EBF801)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
