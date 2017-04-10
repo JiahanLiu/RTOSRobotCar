@@ -505,6 +505,21 @@
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\JimString.c</FilePath>
             </File>
+            <File>
+              <FileName>diskio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\diskio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>ffWrapper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\ffWrapper.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

@@ -10,7 +10,8 @@
 	SysTick: Thread Switching
 	PendSV: Thread Switching when Kill
 	Timer4: Sleep Decrement + OS_Time
-	Timer0: Periodic Thread
+	Timer1: Periodic Thread 1
+	Timer0: Periodic Thread 2
 */
 
 
