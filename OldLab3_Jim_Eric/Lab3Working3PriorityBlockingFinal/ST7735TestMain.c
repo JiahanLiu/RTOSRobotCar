@@ -12,6 +12,7 @@
 	Timer4: Sleep Decrement + OS_Time
 	Timer1: Periodic Thread 1
 	Timer0: Periodic Thread 2
+	Timer2: ADC
 */
 
 
@@ -27,11 +28,13 @@
 #include "../LiuWareTm4C123Lab3/Timer0A.h"
 #include "../LiuWareTM4C123Lab3/LEDS.h" 
 #include "../LiuWareTM4C123Lab3/Filter.h" 
+#include "../LiuWareTM4C123Lab3/Timer3.h"
 
 #define PB2  (*((volatile unsigned long *)0x40005010))
 #define PB3  (*((volatile unsigned long *)0x40005020))
 #define PB4  (*((volatile unsigned long *)0x40005040))
 #define PB5  (*((volatile unsigned long *)0x40005080))
+#define PB7  (*((volatile unsigned long *)0x40005200))
 	
 #define PERIOD1MS 80000
 
@@ -310,10 +313,32 @@ unsigned long myId = OS_Id();
 	}          // done
 }
 
+extern unsigned int pulsePeriod;
+extern int pingPB2_3_ready;
+void PingTest(void) {
+	UART_OutString("Ping Test Started");
+	OutCRLF();
+	Timer3_Init();
+	StartPingSensorPB2_3();
+	while(1) {
+		if(pingPB2_3_ready == 1) {
+			pingPB2_3_ready = 0;
+			UART_OutUDec(pulsePeriod); //accurate for close distances
+			OutCRLF();
+			StartPingSensorPB2_3();
+		}
+	}
+}
+
 void postLauntInits() {
 	UART_Init();
 	UART_OutString("Hello Lab 6.0.1");
 	OutCRLF();
+	OS_Kill();
+}
+
+void PB3High() {
+	PB3 ^= 0x08;
 	OS_Kill();
 }
 
@@ -322,7 +347,7 @@ void postLauntInits() {
 //*******************final user main DEMONTRATE THIS TO TA**********
 int main(void){
   OS_Init();           // initialize, disable interrupts
-  PortB_Init();
+  //PortB_Init();
 	
 	ST7735_InitRDivided(INITR_REDTAB);
  
@@ -335,7 +360,7 @@ int main(void){
   OS_Fifo_Init(32);    // ***note*** 4 is not big enough*****
 
 //*******attach background tasks***********
-  //OS_AddSW1Task(&SW1Push,2); //not stuck
+  OS_AddSW1Task(&PB3High,2); //not stuck
   //OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
 
   //ADC_Init(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
@@ -345,7 +370,8 @@ int main(void){
 	
 	numCreated += OS_AddThread(&postLauntInits,128,1);
 	//numCreated += OS_AddThread(&Interpreter,128,5);
-	numCreated += OS_AddThread(&Consumer,128,2); 
+	//numCreated += OS_AddThread(&Consumer,128,2); 
+	numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
 	
 	/*

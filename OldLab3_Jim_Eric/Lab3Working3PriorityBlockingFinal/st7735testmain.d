@@ -11,3 +11,4 @@
 .\st7735testmain.o: ../LiuWareTm4C123Lab3/Timer0A.h
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/LEDS.h
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/Filter.h
+.\st7735testmain.o: ../LiuWareTM4C123Lab3/Timer3.h
