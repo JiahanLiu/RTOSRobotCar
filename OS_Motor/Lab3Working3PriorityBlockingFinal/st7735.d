@@ -4,5 +4,3 @@
 .\st7735.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ST7735.h
 .\st7735.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h
 .\st7735.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h
-.\st7735.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/diskio.h
-.\st7735.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/../LiuWareTM4C123Lab3/integer.h

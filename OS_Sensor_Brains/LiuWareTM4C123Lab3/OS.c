@@ -6,7 +6,7 @@
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/OS.h"  
 #include "../LiuWareTM4C123Lab3/PLL.h"
-#include "../LiuWareTM4C123Lab3/Timer4A.h" //used for sleep decrement + OS Time
+#include "../LiuWareTM4C123Lab3/Timer5.h" //used for sleep decrement + OS Time
 #include "../LiuWareTM4C123Lab3/Timer0A.h" //used for periodic thread 0
 #include "../LiuWareTM4C123Lab3/Timer1.h" //used for periodic thread 1
 #include "../LiuWareTM4C123Lab3/PFEdgeTrigger.h"
@@ -26,14 +26,11 @@ void doSleepDecrement(void);
 void updateOSTime(void); 
 
 #define TIME_1MS   80000  
-#define NUMTHREADS 10
-#define NUMTHREADSPLUSONE (NUMTHREADS + 1)
 #define STACKSIZE 100
 
 extern unsigned long DataLost;     // data sent by Producer, but not received by Consumer
 extern unsigned long numCreated;   // number of foreground threads created
 extern int numThreads;
-extern int debugBlocked;
 
 //---------------- TCB ------------------- 
 tcbType tcbs[NUMTHREADS];
@@ -96,7 +93,7 @@ void OS_Init(void) {
 	}
 	//Timer 4A used for Sleep Decrement + Incrementing OS Time
 	int tempPriority = 1;
-	Timer4A_Init(&doSleepDecrement, TIME_1MS, tempPriority);
+	Timer5_Init(&doSleepDecrement, TIME_1MS, tempPriority); //timer sleep
 	//Sets up LEDs for hardfault debugging and debugging
 	initHardFault(); 
 	//Initialize Semaphores to be used for Initalizing Drivers
@@ -137,7 +134,6 @@ void OS_Wait(Sema4Type *semaPt) {
 	semaPt->UserPriority = RunPt->priority; //debug
 	//-- add to list
 	if(semaPt->Value == -1) { //I am first one waiting
-		debugBlocked++;
 		RunPt->blockedState = 1;
 		semaPt->listHeadPtr = RunPt; 
 		RunPt->blockedNext = NULL; //if previously used it may not be null
@@ -146,7 +142,6 @@ void OS_Wait(Sema4Type *semaPt) {
 		priQueueRemove(RunPt); //remove running thread from active
 		OS_Suspend(); //almost equal to an return
 	} else if(semaPt->Value < -1) { //there are otherse waiting
-		debugBlocked++;
 		RunPt->blockedState = 1;
 		(semaPt->listEndPtr)->blockedNext = RunPt;
 		RunPt->blockedNext = NULL; //if previously used it may not be null
@@ -169,7 +164,6 @@ void OS_Signal(Sema4Type *semaPt) {
 	(semaPt->Value) = (semaPt->Value) + 1; //I am freeing the resource that I was using
 	semaPt->SignalerPriority = RunPt->priority; //debug - who signaled last on this semaphore
 	if(semaPt->Value <= 0) { //if it was previously negative one -> which means atleast one is waiting
-		debugBlocked--;
 		RunPt->blockedState = 0;
 		priQueuePush((semaPt->listHeadPtr)); //add first thread to list
 		//update list
@@ -257,7 +251,6 @@ int OS_AddThread(void(*task)(void), unsigned long stackSize, unsigned long prior
 		priQueuePush(&tcbs[nextFreeID]);
 		//init run pointer
 		RunPt = priQueuePeek();
-		
 	}
 	EndCritical(status);
 	return 1;
@@ -564,7 +557,7 @@ unsigned long OS_MailBox_Recv(void) {
 // Resolution: Bus Cycles
 unsigned long OS_Time(void) {
 	
-	long result = (OStime * TIME_1MS) + (80000 - TIMER4_TAV_R); //bus cycles
+	long result = (OStime * TIME_1MS) + (80000 - TIMER5_TAV_R); //bus cycles
 
 	return result; 
 }

@@ -13,6 +13,15 @@
 	Timer1: Periodic Thread 1
 	Timer0: Periodic Thread 2
 	Timer2: ADC
+	
+	New Timers
+	Timer 0: IR
+	Timer 1: IR
+	Timer 2: IR
+	Timer 3: IR
+	Timer 4: CAN
+	Timer 5: Sleep Decrement + OS_Time
+	Timer 6: Periodic Thread for Pulse
 */
 
 
@@ -29,6 +38,8 @@
 #include "../LiuWareTm4C123Lab3/Timer1.h"
 #include "../LiuWareTM4C123Lab3/LEDS.h" 
 #include "../LiuWareTM4C123Lab3/Filter.h" 
+#include "../LiuWareTM4C123Lab3/CAN/can0.h"
+#include "../LiuWareTM4C123Lab3/CAN/Timer4.h" //used for sleep decrement + OS Time
 
 #define PB2  (*((volatile unsigned long *)0x40005010))
 #define PB3  (*((volatile unsigned long *)0x40005020))
@@ -46,7 +57,7 @@ void WaitForInterrupt(void);  // low power mode
 void PortB_Init(void); 
 
 #define FS 400              // producer/consumer sampling
-#define RUNLENGTH (2000 * FS )   // display results and quit when NumSamples==RUNLENGTH
+#define RUNLENGTH (20 * FS )   // display results and quit when NumSamples==RUNLENGTH
 //#define FS 5
 //#define RUNLENGTH (10)   // display results and quit when NumSamples==RUNLENGTH
 
@@ -209,6 +220,7 @@ void Producer(unsigned long data){
     if(OS_Fifo_Put(data) == -1){ // send to consumer
       DataLost++;
     }
+		/*
 		//if(NumSamples < 4) {
 			//UART_OutUDec(data);
 			//OutCRLF();
@@ -225,7 +237,7 @@ void Producer(unsigned long data){
 				UART_OutUDec(20000/Median(result[0], result[1], result[2])); //accurate for close distances
 				OutCRLF();
 			}
-		//}
+		//} */
   } 
 }
 void Display(void); 
@@ -321,13 +333,6 @@ void PingTest(void) {
 	
 }
 
-void postLauntInits() {
-	UART_Init();
-	UART_OutString("Hello Lab 6.0.1");
-	OutCRLF();
-	OS_Kill();
-}
-
 void ReadPingSensor() {
 	while(1) {
 		if(pingPB6_7_ready == 1) {
@@ -364,12 +369,48 @@ void ReadIRSensor() {
 	}
 }
 
+uint8_t XmtData[8];
+uint8_t RcvData[8];
+uint32_t RcvCount=0;
+uint8_t sequenceNum=0;  
+void UserTask(void){
+  XmtData[0] = 'H';//PF0<<1;  // 0 or 2
+  XmtData[1] = 'I';//PF4>>2;  // 0 or 4
+  XmtData[2] = 'J';//0;       // unassigned field
+  XmtData[3] = 'I';//sequenceNum;  // sequence count
+  XmtData[4] = 'M';
+  XmtData[5] = 'B';
+  XmtData[6] = 'O';
+  XmtData[7] = 'O';
+  CAN0_SendData(XmtData);
+  sequenceNum++;
+}
+void CANTest() {
+  while(1){
+    if(CAN0_GetMailNonBlock(RcvData)){
+      RcvCount++;
+    }
+	}	
+}
+
+void postLauntInits(){
+	long sr = StartCritical();
+	CAN0_Open();
+	Timer4_Init(&UserTask, 1600000); // initialize timer3 (10 Hz) // Sleep
+	EndCritical(sr);
+	UART_Init();
+	UART_OutString("Hello Lab 6.0.1");
+	OutCRLF();
+	OS_Kill();
+}
+
+
 //--------------end of Task 4-----------------------------
 
 //*******************final user main DEMONTRATE THIS TO TA**********
 int main(void){
   OS_Init();           // initialize, disable interrupts
-	Timer0A_Init();
+	//Timer0A_Init();
   //PortB_Init();
 	
 	ST7735_InitRDivided(INITR_REDTAB);
@@ -384,7 +425,7 @@ int main(void){
 
 //*******attach background tasks***********
   //OS_AddSW1Task(&PB3High,2); //not stuck
-  //OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
+  OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
 
   //ADC_Init(4);  // sequencer 3, channel 4, PD3, sampling in DAS()
   //OS_AddPeriodicThread(&DAS,PERIOD,0); // 2 kHz real time sampling of PD3 -> input = ADC_In(); 
@@ -393,7 +434,8 @@ int main(void){
 	//create initial foreground threads
 	
 	numCreated += OS_AddThread(&postLauntInits,128,1);
-	numCreated += OS_AddThread(&Interpreter,128,5);
+	//numCreated += OS_AddThread(&Interpreter,128,5);
+	numCreated += OS_AddThread(&CANTest,128,2);
 	//numCreated += OS_AddThread(&Consumer,128,2); 
 	//numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority

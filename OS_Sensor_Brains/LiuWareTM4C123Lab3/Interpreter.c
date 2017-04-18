@@ -10,7 +10,6 @@
 #include "../LiuWareTM4C123Lab3/ADC.h"
 #include "../LiuWareTm4C123Lab3/Interpreter.h"
 #include "../LiuWareTm4C123Lab3/JimString.h"
-#include "../LiuWareTm4C123Lab3/ffWrapper.h"
 #include "../LiuWareTm4C123Lab3/Filter.h"
 
 void DisableInterrupts(void); // Disable interrupts
@@ -93,7 +92,7 @@ void ProcessCommand(){
 			break;
 		case 'D':
 		case 'd':
-			numCreated += OS_AddThread(&FileSystemTest,128,1);
+//			numCreated += OS_AddThread(&FileSystemTest,128,1);
 			break;
 		/* Case H */ 
 		case 'H':

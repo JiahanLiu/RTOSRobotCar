@@ -411,9 +411,9 @@
               <FilePath>.\ST7735TestMain.c</FilePath>
             </File>
             <File>
-              <FileName>ADC.c</FileName>
+              <FileName>Filter.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\ADC.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\Filter.c</FilePath>
             </File>
             <File>
               <FileName>IDQueue.c</FileName>
@@ -424,6 +424,16 @@
               <FileName>Interpreter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\Interpreter.c</FilePath>
+            </File>
+            <File>
+              <FileName>JimString.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\JimString.c</FilePath>
+            </File>
+            <File>
+              <FileName>LEDS.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\LEDS.c</FilePath>
             </File>
             <File>
               <FileName>OS.c</FileName>
@@ -466,9 +476,14 @@
               <FilePath>..\LiuWareTM4C123Lab3\Timer1.c</FilePath>
             </File>
             <File>
-              <FileName>Timer4A.c</FileName>
+              <FileName>Timer3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\Timer4A.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\Timer3.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\Timer5.c</FilePath>
             </File>
             <File>
               <FileName>UART.c</FileName>
@@ -476,19 +491,9 @@
               <FilePath>..\LiuWareTM4C123Lab3\UART.c</FilePath>
             </File>
             <File>
-              <FileName>cr4_fft_64_stm32.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s</FilePath>
-            </File>
-            <File>
-              <FileName>osasm.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\osasm.s</FilePath>
-            </File>
-            <File>
-              <FileName>PID_stm32.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\PID_stm32.s</FilePath>
+              <FileName>ADC.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\ADC.c</FilePath>
             </File>
             <File>
               <FileName>startup.s</FileName>
@@ -496,39 +501,39 @@
               <FilePath>..\LiuWareTM4C123Lab3\startup.s</FilePath>
             </File>
             <File>
-              <FileName>LEDS.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\LEDS.c</FilePath>
+              <FileName>PID_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\PID_stm32.s</FilePath>
             </File>
             <File>
-              <FileName>JimString.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\JimString.c</FilePath>
+              <FileName>osasm.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\osasm.s</FilePath>
             </File>
             <File>
-              <FileName>diskio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\diskio.c</FilePath>
+              <FileName>cr4_fft_64_stm32.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\cr4_fft_64_stm32.s</FilePath>
             </File>
             <File>
-              <FileName>ff.c</FileName>
+              <FileName>can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\ff.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\CAN\can.c</FilePath>
             </File>
             <File>
-              <FileName>ffWrapper.c</FileName>
+              <FileName>can0.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\ffWrapper.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\CAN\can0.c</FilePath>
             </File>
             <File>
-              <FileName>Filter.c</FileName>
+              <FileName>interrupt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\Filter.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\CAN\interrupt.c</FilePath>
             </File>
             <File>
-              <FileName>Timer3.c</FileName>
+              <FileName>Timer4.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\Timer3.c</FilePath>
+              <FilePath>..\LiuWareTM4C123Lab3\CAN\Timer4.c</FilePath>
             </File>
           </Files>
         </Group>

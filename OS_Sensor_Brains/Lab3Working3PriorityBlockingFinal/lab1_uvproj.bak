@@ -520,6 +520,16 @@
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\ffWrapper.c</FilePath>
             </File>
+            <File>
+              <FileName>Filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\Filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\Timer3.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

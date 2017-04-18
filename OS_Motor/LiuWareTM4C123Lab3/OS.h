@@ -19,7 +19,7 @@
 #define TIME_250US  (TIME_1MS/5)
 #define NULL 0
 
-#define NUMTHREADS 10
+#define NUMTHREADS 20
 #define NUMTHREADSPLUSONE (NUMTHREADS + 1) //for queues
 
 struct tcb{

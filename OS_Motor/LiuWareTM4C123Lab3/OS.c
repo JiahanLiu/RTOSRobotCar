@@ -6,7 +6,7 @@
 #include "../LiuWareTM4C123Lab3/tm4c123gh6pm.h"
 #include "../LiuWareTM4C123Lab3/OS.h"  
 #include "../LiuWareTM4C123Lab3/PLL.h"
-#include "../LiuWareTM4C123Lab3/Timer4A.h" //used for sleep decrement + OS Time
+#include "../LiuWareTM4C123Lab3/Timer5.h" //used for sleep decrement + OS Time
 #include "../LiuWareTM4C123Lab3/Timer0A.h" //used for periodic thread 0
 #include "../LiuWareTM4C123Lab3/Timer1.h" //used for periodic thread 1
 #include "../LiuWareTM4C123Lab3/PFEdgeTrigger.h"
@@ -26,8 +26,6 @@ void doSleepDecrement(void);
 void updateOSTime(void); 
 
 #define TIME_1MS   80000  
-#define NUMTHREADS 10
-#define NUMTHREADSPLUSONE (NUMTHREADS + 1)
 #define STACKSIZE 100
 
 extern unsigned long DataLost;     // data sent by Producer, but not received by Consumer
@@ -96,7 +94,7 @@ void OS_Init(void) {
 	}
 	//Timer 4A used for Sleep Decrement + Incrementing OS Time
 	int tempPriority = 1;
-	Timer4A_Init(&doSleepDecrement, TIME_1MS, tempPriority);
+	Timer5_Init(&doSleepDecrement, TIME_1MS, tempPriority); //timer sleep
 	//Sets up LEDs for hardfault debugging and debugging
 	initHardFault(); 
 	//Initialize Semaphores to be used for Initalizing Drivers
@@ -564,7 +562,7 @@ unsigned long OS_MailBox_Recv(void) {
 // Resolution: Bus Cycles
 unsigned long OS_Time(void) {
 	
-	long result = (OStime * TIME_1MS) + (80000 - TIMER4_TAV_R); //bus cycles
+	long result = (OStime * TIME_1MS) + (80000 - TIMER5_TAV_R); //bus cycles
 
 	return result; 
 }
