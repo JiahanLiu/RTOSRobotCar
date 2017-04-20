@@ -8,15 +8,8 @@
 #ifndef __ADC_H
 #define __ADC_H  1
 
-/* ADC_Init
-* Function: Init for ADC_In, single collect
-*/
-int ADC_Init(uint32_t channelNum);
-
-/* ADC_In
-* Function: single collect
-*/
-uint16_t ADC_In(void);
+#include <stdint.h>
+#include "OS.h"
 
 /* ADC_Collect
 * Function: This is actually the initalization of buffered collect. 
@@ -25,7 +18,7 @@ uint16_t ADC_In(void);
 * TODO: 1) Semaphore for multiple called
 * TODO: 2) Boolean for not multiple init
 */
-int ADC_Collect_Init(uint32_t channelNum, uint32_t fs, void(*pTask)(unsigned long data));
+int IR_Sensor_Init(uint32_t fs, void(*pTask)(IR_Data_Type data));
 
 int ADC_Status(void);
 

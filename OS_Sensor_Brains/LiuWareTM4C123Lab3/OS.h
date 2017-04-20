@@ -47,6 +47,16 @@ typedef struct Sema4 Sema4Type;
 
 extern Sema4Type mutexPFInit;
 
+//---------------- IR_DATA_STRUCT -------------------
+struct IR_Data{
+  unsigned long BottomLeft;
+	unsigned long TopLeft;
+	unsigned long TopRight;
+	unsigned long BottomRight;
+// add other components here, if necessary to implement blocking
+};
+typedef struct IR_Data IR_Data_Type;
+
 // ******** OS_Init ************
 // initialize operating system, disable interrupts until OS_Launch
 // initialize OS controlled I/O: serial, ADC, systick, LaunchPad I/O and timers 
@@ -210,14 +220,14 @@ void OS_Fifo_Init(unsigned long size);
 //          false if data not saved, because it was full
 // Since this is called by interrupt handlers 
 //  this function can not disable or enable interrupts
-int OS_Fifo_Put(unsigned long data);  
+int OS_Fifo_Put(IR_Data_Type data);  
 
 // ******** OS_Fifo_Get ************
 // Remove one data sample from the Fifo
 // Called in foreground, will spin/block if empty
 // Inputs:  none
 // Outputs: data 
-unsigned long OS_Fifo_Get(void);
+IR_Data_Type OS_Fifo_Get(void);
 
 // ******** OS_Fifo_Size ************
 // Check the status of the Fifo
@@ -240,7 +250,7 @@ void OS_MailBox_Init(void);
 // Outputs: none
 // This function will be called from a foreground thread
 // It will spin/block if the MailBox contains data not yet received 
-void OS_MailBox_Send(unsigned long data);
+void OS_MailBox_Send(IR_Data_Type data);
 
 // ******** OS_MailBox_Recv ************
 // remove mail from the MailBox
@@ -248,7 +258,7 @@ void OS_MailBox_Send(unsigned long data);
 // Outputs: data received
 // This function will be called from a foreground thread
 // It will spin/block if the MailBox is empty 
-unsigned long OS_MailBox_Recv(void);
+IR_Data_Type OS_MailBox_Recv(void);
 
 // ******** OS_Time ************
 // return the system time 

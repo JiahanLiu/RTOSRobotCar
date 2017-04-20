@@ -103,20 +103,10 @@ short PID_stm32(short Error, short *Coeff);
 
 // 20-sec finite time experiment duration 
 #define PERIOD TIME_500US   // DAS 2kHz sampling period in system time units
-long x[64],y[64];           // input and output arrays for FFT
-
-void PortB_Init(void){ 
-	unsigned long volatile delay;
-  SYSCTL_RCGCGPIO_R |= 0x02;       // activate port B
-  delay = SYSCTL_RCGC2_R;
-  delay = SYSCTL_RCGC2_R;
-  GPIO_PORTB_DIR_R |= 0x3C;    // make PB5-2 output heartbeats
-  GPIO_PORTB_AFSEL_R &= ~0x3C;   // disable alt funct on PB5-2
-  GPIO_PORTB_DEN_R |= 0x3C;     // enable digital I/O on PB5-2
-  GPIO_PORTB_PCTL_R = ~0x00FFFF00;
-  GPIO_PORTB_AMSEL_R &= ~0x3C;      // disable analog functionality on PB
-} 
-
+unsigned long xBottomLeft[64],yBottomLeft[64];           // input and output arrays for FFT
+unsigned long xTopLeft[64],yTopLeft[64];           // input and output arrays for FFT
+unsigned long xTopRight[64],yTopRight[64];           // input and output arrays for FFT
+unsigned long xBottomRight[64],yBottomRight[64];           // input and output arrays for FFT
 
 //------------------Display on Screen 2--------------------------------
 // background thread executes with SW1 button
@@ -169,7 +159,7 @@ void SW2Push(void){
 // inputs:  none
 // outputs: none
 int result[3];
-void Producer(unsigned long data){  
+void Producer(IR_Data_Type data){  
   if(NumSamples < RUNLENGTH){   // finite time run
     NumSamples++;               // number of samples
     if(OS_Fifo_Put(data) == -1){ // send to consumer
@@ -185,21 +175,32 @@ void Display(void);
 // inputs:  none
 // outputs: none
 void Consumer(void){ 
-unsigned long data,DCcomponent;   // 12-bit raw ADC sample, 0 to 4095
+IR_Data_Type data;
+IR_Data_Type DCcomponent;   // 12-bit raw ADC sample, 0 to 4095
 unsigned long t;                  // time in 2.5 ms
 unsigned long myId = OS_Id(); 
 	DataLost = 0; 
-  ADC_Collect_Init(5, FS, &Producer); // start ADC sampling, channel 5, PD2, 400 Hz
+  IR_Sensor_Init(FS, &Producer); // start ADC sampling, channel 5, PD2, 400 Hz
   numCreated += OS_AddThread(&Display,128,1); 
   while(NumSamples < RUNLENGTH - 32) { 
     for(t = 0; t < 64; t++){   // collect 64 ADC samples
       data = OS_Fifo_Get();    // get from producer - if we get stuck here then display may have been killed
-      x[t] = data;             // real part is 0 to 4095, imaginary part is 0
+			xBottomLeft[t] = data.BottomLeft;             // real part is 0 to 4095, imaginary part is 0
+			xTopLeft[t] = data.TopLeft;
+			xTopRight[t] = data.TopRight;
+			xBottomRight[t] = data.BottomRight;
     }
-    cr4_fft_64_stm32(y,x,64);  // complex FFT of last 64 ADC values
-    DCcomponent = y[0]&0xFFFF; // Real part at frequency 0, imaginary part should be zero
-    OS_MailBox_Send(DCcomponent); // called every 2.5ms*64 = 160ms
+    cr4_fft_64_stm32(yBottomLeft,xBottomLeft,64);  // complex FFT of last 64 ADC values
+		cr4_fft_64_stm32(yTopLeft,xTopLeft,64);  // complex FFT of last 64 ADC values
+		cr4_fft_64_stm32(yTopRight,xTopRight,64);  // complex FFT of last 64 ADC values
+		cr4_fft_64_stm32(yBottomRight,xBottomRight,64);  // complex FFT of last 64 ADC values
+    DCcomponent.BottomLeft = yBottomLeft[0]&0xFFFF; // Real part at frequency 0, imaginary part should be zero
+		DCcomponent.TopLeft = yTopLeft[0]&0xFFFF;
+		DCcomponent.TopRight = yTopRight[0]&0xFFFF;
+    DCcomponent.BottomRight = yBottomRight[0]&0xFFFF;
+		OS_MailBox_Send(DCcomponent); // called every 2.5ms*64 = 160ms
   }
+	LEDS = RED;
   OS_Kill();  // never called
 }
 //******** Display *************** 
@@ -208,14 +209,34 @@ unsigned long myId = OS_Id();
 // inputs:  none                            
 // outputs: none
 void Display(void){ 
-unsigned long data,distance;
+IR_Data_Type data;
+IR_Data_Type distance;
 unsigned long myId2 = OS_Id(); 
   ST7735_Message(0,1,"Run length = ",(RUNLENGTH)/FS);   // top half used for Display
-  while(NumSamples < RUNLENGTH - 32) { 
-    data = OS_MailBox_Recv();
-    distance = 20000/data;               // calibrate your device so voltage is in mV
-    ST7735_Message(0,2,"v(mV) =",distance);
+  while(NumSamples < RUNLENGTH - 32) {
+		IR_Data_Type tempData;
+    tempData = OS_MailBox_Recv();
+    data = tempData;
+		distance.BottomLeft = 20000/data.BottomLeft;               // calibrate your device so voltage is in mV
+		distance.TopLeft = 20000/data.TopLeft;
+		distance.TopRight = 20000/data.TopRight;
+		distance.BottomRight = 20000/data.BottomRight;
+    //ST7735_Message(0,2,"v(mV) =",distance.BottomLeft);
+		//ST7735_Message(0,3,"v(mV) =",distance.TopLeft);
+		//ST7735_Message(0,4,"v(mV) =",distance.TopRight);
+		//ST7735_Message(0,5,"v(mV) =",distance.BottomRight);
+		UART_OutString("Start -----------");
+		OutCRLF();
+		UART_OutUDec(distance.BottomLeft);
+		OutCRLF();
+		UART_OutUDec(distance.TopLeft);
+		OutCRLF();
+		UART_OutUDec(distance.TopRight);
+		OutCRLF();
+		UART_OutUDec(distance.BottomRight);
+		OutCRLF();
   }
+	LEDS = RED;
   OS_Kill();  // never called
 } 
 
@@ -266,7 +287,7 @@ uint8_t XmtData[8];
 uint8_t RcvData[8];
 uint32_t RcvCount=0;
 uint8_t sequenceNum=0;  
-void UserTask(void){
+void UserTask(void) {
   XmtData[0] = 'H';//PF0<<1;  // 0 or 2
   XmtData[1] = 'I';//PF4>>2;  // 0 or 4
   XmtData[2] = 'J';//0;       // unassigned field

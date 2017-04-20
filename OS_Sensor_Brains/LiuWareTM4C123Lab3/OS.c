@@ -425,9 +425,9 @@ void OS_KilledSuspend(void) {
 
 //---------------- OS_Fifo Vars -------------------
 const long FIFOSIZE = 32;
-uint32_t volatile *PutPt;
-uint32_t volatile *GetPt;
-uint32_t static Fifo[FIFOSIZE];
+IR_Data_Type volatile *PutPt;
+IR_Data_Type volatile *GetPt;
+IR_Data_Type static Fifo[FIFOSIZE];
 Sema4Type CurrentSize;
 Sema4Type RoomLeft;
 Sema4Type FIFOmutex;
@@ -459,7 +459,7 @@ void OS_Fifo_Init(unsigned long size) {
 //          false if data not saved, because it was full
 // Since this is called by interrupt handlers 
 //  this function can not disable or enable interrupts
-int OS_Fifo_Put(unsigned long data) {
+int OS_Fifo_Put(IR_Data_Type data) {
 	OS_Wait(&RoomLeft);
 	OS_Wait(&FIFOmutex);
 	if(CurrentSize.Value == FIFOSIZE) { //data loss recorder
@@ -481,8 +481,8 @@ int OS_Fifo_Put(unsigned long data) {
 // Called in foreground, will spin/block if empty
 // Inputs:  none
 // Outputs: data 
-unsigned long OS_Fifo_Get(void) {
-	uint32_t data;
+IR_Data_Type OS_Fifo_Get(void) {
+	IR_Data_Type data;
 	OS_Wait(&CurrentSize);
 	OS_Wait(&FIFOmutex);
 	data = *(GetPt);
@@ -507,7 +507,7 @@ long OS_Fifo_Size(void) {
 }
 
 //---------------- MailBox Vars -------------------
-unsigned long mailValue;
+IR_Data_Type mailValue;
 Sema4Type mailSend;
 Sema4Type mailAck; 
 
@@ -516,7 +516,10 @@ Sema4Type mailAck;
 // Inputs:  none
 // Outputs: none
 void OS_MailBox_Init(void) {
-	mailValue = 0;
+	mailValue.BottomLeft = 0;
+	mailValue.TopLeft = 0;
+	mailValue.TopRight = 0;
+	mailValue.BottomRight = 0;
 	mailSend.Value = 0;
   mailAck.Value = 1; 
 }
@@ -527,7 +530,7 @@ void OS_MailBox_Init(void) {
 // Outputs: none
 // This function will be called from a foreground thread
 // It will spin/block if the MailBox contains data not yet received 
-void OS_MailBox_Send(unsigned long data) {
+void OS_MailBox_Send(IR_Data_Type data) {
 	OS_Wait(&mailAck);
 	mailValue = data;
 	OS_Signal(&mailSend);  
@@ -539,10 +542,10 @@ void OS_MailBox_Send(unsigned long data) {
 // Outputs: data received
 // This function will be called from a foreground thread
 // It will spin/block if the MailBox is empty 
-unsigned long OS_MailBox_Recv(void) {
-	unsigned long theData;
+IR_Data_Type theData;
+IR_Data_Type OS_MailBox_Recv(void) {
 	OS_Wait(&mailSend);
-	theData = mailValue; 
+	theData = mailValue;
 	OS_Signal(&mailAck);
 	return theData; 
 }
