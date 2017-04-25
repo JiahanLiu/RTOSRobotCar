@@ -13,4 +13,5 @@
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/LEDS.h
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/Filter.h
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/CAN/can0.h
+.\st7735testmain.o: ../LiuWareTM4C123Lab3/PWM.h
 .\st7735testmain.o: ../LiuWareTM4C123Lab3/CAN/Timer4.h

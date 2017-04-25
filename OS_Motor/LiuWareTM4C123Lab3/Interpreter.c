@@ -50,9 +50,6 @@ void ProcessCommand(){
 		// LCD - allows UART to output to LCD
 	int lineNum; 
 	int deviceNum;
-		// ADC
-	int adcChannel; 
-	//int adcFreq; - legacy from lab 1, the frequency is controlled by ADC_Collect_Init and we never re-implimented it
 	/* Get Command */
 	UART_OutString("$"); //linux style prompting
 	UART_InString(uartString,MAX_UART_IN_LEN-1); //busy wait for UART input
@@ -63,27 +60,6 @@ void ProcessCommand(){
 		/* Case A */
 		case 'A':
 		case 'a':
-			//if(uartString[3] == 'S' || uartString[3] == 's') {
-				adcChannel = StringToInt(uartString+13, strLengthByNullCount(uartString+13)); 
-				adcChannel = 4;
-				
-				unsigned long lock = OS_LockScheduler();
-				ADC_Init(adcChannel);
-				int result[100];
-				for(int i = 0; i < 100; i++) {
-					int tempMeasurement = ADC_In();
-					result[i] = tempMeasurement; 
-				}
-				OS_UnLockScheduler(lock);
-				for(int i = 0; i < 100; i++) {
-					UART_OutUDec(result[i]);
-					OutCRLF();
-				}
-				UART_OutString("Median: ");
-				OutCRLF();
-				UART_OutUDec(29000/Median(result[10], result[11], result[12]));
-				OutCRLF();				
-			//}
 			break; 	
 		/* Case C */
 		case 'C':

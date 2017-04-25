@@ -411,16 +411,6 @@
               <FilePath>.\ST7735TestMain.c</FilePath>
             </File>
             <File>
-              <FileName>ADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\ADC.c</FilePath>
-            </File>
-            <File>
-              <FileName>Filter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\Filter.c</FilePath>
-            </File>
-            <File>
               <FileName>IDQueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\IDQueue.c</FilePath>
@@ -446,11 +436,6 @@
               <FilePath>..\LiuWareTM4C123Lab3\OS.c</FilePath>
             </File>
             <File>
-              <FileName>PFEdgeTrigger.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\PFEdgeTrigger.c</FilePath>
-            </File>
-            <File>
               <FileName>PLL.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\PLL.c</FilePath>
@@ -459,11 +444,6 @@
               <FileName>ST7735.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\ST7735.c</FilePath>
-            </File>
-            <File>
-              <FileName>SysTickInts.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\LiuWareTM4C123Lab3\SysTickInts.c</FilePath>
             </File>
             <File>
               <FileName>ThreadPriorityPQueue.c</FileName>
@@ -534,6 +514,16 @@
               <FileName>startup.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\LiuWareTM4C123Lab3\startup.s</FilePath>
+            </File>
+            <File>
+              <FileName>PFEdgeTrigger.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\PFEdgeTrigger.c</FilePath>
+            </File>
+            <File>
+              <FileName>PWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\LiuWareTM4C123Lab3\PWM.c</FilePath>
             </File>
           </Files>
         </Group>

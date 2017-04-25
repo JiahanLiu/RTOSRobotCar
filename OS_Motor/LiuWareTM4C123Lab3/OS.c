@@ -31,7 +31,6 @@ void updateOSTime(void);
 extern unsigned long DataLost;     // data sent by Producer, but not received by Consumer
 extern unsigned long numCreated;   // number of foreground threads created
 extern int numThreads;
-extern int debugBlocked;
 
 //---------------- TCB ------------------- 
 tcbType tcbs[NUMTHREADS];
@@ -135,7 +134,6 @@ void OS_Wait(Sema4Type *semaPt) {
 	semaPt->UserPriority = RunPt->priority; //debug
 	//-- add to list
 	if(semaPt->Value == -1) { //I am first one waiting
-		debugBlocked++;
 		RunPt->blockedState = 1;
 		semaPt->listHeadPtr = RunPt; 
 		RunPt->blockedNext = NULL; //if previously used it may not be null
@@ -144,7 +142,6 @@ void OS_Wait(Sema4Type *semaPt) {
 		priQueueRemove(RunPt); //remove running thread from active
 		OS_Suspend(); //almost equal to an return
 	} else if(semaPt->Value < -1) { //there are otherse waiting
-		debugBlocked++;
 		RunPt->blockedState = 1;
 		(semaPt->listEndPtr)->blockedNext = RunPt;
 		RunPt->blockedNext = NULL; //if previously used it may not be null
@@ -167,7 +164,6 @@ void OS_Signal(Sema4Type *semaPt) {
 	(semaPt->Value) = (semaPt->Value) + 1; //I am freeing the resource that I was using
 	semaPt->SignalerPriority = RunPt->priority; //debug - who signaled last on this semaphore
 	if(semaPt->Value <= 0) { //if it was previously negative one -> which means atleast one is waiting
-		debugBlocked--;
 		RunPt->blockedState = 0;
 		priQueuePush((semaPt->listHeadPtr)); //add first thread to list
 		//update list
