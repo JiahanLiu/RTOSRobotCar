@@ -392,6 +392,7 @@ int main(void){
   OS_AddSW2Task(&SW2Push,2);  // add this line in Lab 3
 	
 	///periodic test
+	OS_AddPeriodicThread(CanSendMessage, TIME_2MS * 200, 2);
 	
 	//create initial foreground threads
 	

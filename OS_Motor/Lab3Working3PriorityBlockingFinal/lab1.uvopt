@@ -223,10 +223,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>60</ColumnNumber>
+      <ColumnNumber>32</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>276</TopLine>
-      <CurrentLine>288</CurrentLine>
+      <TopLine>368</TopLine>
+      <CurrentLine>378</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\ST7735TestMain.c</PathWithFileName>
       <FilenameWithoutPath>ST7735TestMain.c</FilenameWithoutPath>
@@ -303,7 +303,7 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>55</ColumnNumber>
+      <ColumnNumber>56</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
       <TopLine>183</TopLine>
       <CurrentLine>184</CurrentLine>
@@ -593,7 +593,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>190</TopLine>
+      <TopLine>250</TopLine>
       <CurrentLine>254</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\LiuWareTM4C123Lab3\PWM.c</PathWithFileName>

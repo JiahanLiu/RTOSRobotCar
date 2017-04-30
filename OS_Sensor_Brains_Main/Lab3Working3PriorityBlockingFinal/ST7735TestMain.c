@@ -121,81 +121,105 @@ void Producer(IR_Data_Type data){
 void Display(void); 
 void StateMachine(void);
 
-int calibrationChartBottomLeft[15][2] = {
-	{10,2857},
-	{15,1961},
-	{20,1493},
-	{25,1231},
-	{30,1044},
+int calibrationChartBottomLeft[21][2] = {
+	{7,3836},
+	{8,3425},
+	{9,3032},
+	{10,2724},
+	{11,2532},
+	{13,2060},
+	{15,1940},
+	{20,1472},
+	{25,1203},
+	{30,1020},
 	{35,879},
-	{40,783},
-	{45,688},
-	{50,552},
-	{55,441},
-	{60,345},
-	{65,251},
-	{70,225},
-	{75,201},
-	{80,0}
+	{40,760},
+	{45,664},
+	{50,568},
+	{55,472},
+	{60,393},
+	{65,321},
+	{70,260},
+	{75,196},
+	{80,155},
+	{85, 0}
 };
 
-int calibrationChartTopLeft[15][2] = {
-	{10,2886},
+int calibrationChartTopLeft[21][2] = {
+	{7,3788},
+	{8,3384},
+	{9,3053},
+	{10,2868},
+	{11,2491},
+	{13,2294},
 	{15,1972},
-	{20,1544},
-	{25,1233},
-	{30,1022},
-	{35,884},
-	{40,764},
-	{45,669},
-	{50,585},
-	{55,471},
-	{60,374},
-	{65,326},
-	{70,255},
-	{75,200},
-	{80,0}
+	{20,1499},
+	{25,1188},
+	{30,1000},
+	{35,861},
+	{40,753},
+	{45,645},
+	{50,544},
+	{55,448},
+	{60,377},
+	{65,303},
+	{70,208},
+	{75,275},
+	{80,151},
+	{85, 0}
 };
 
-int calibrationChartTopRight[15][2] = {
-	{10,2832},
-	{15,2009},
-	{20,1539},
-	{25,1249},
-	{30,1059},
-	{35,889},
-	{40,759},
-	{45,640},
+int calibrationChartTopRight[21][2] = {
+	{7,3840},
+	{8,3508},
+	{9,2964},
+	{10,2812},
+	{11,2554},
+	{13,2305},
+	{15,1970},
+	{20,1589},
+	{25,1252},
+	{30,1037},
+	{35,873},
+	{40,769},
+	{45,672},
 	{50,573},
 	{55,472},
-	{60,440},
-	{65,385},
-	{70,312},
-	{75,287},
-	{80,0}
+	{60,424},
+	{65,374},
+	{70,300},
+	{75,260},
+	{80,215},
+	{85, 0}
 };
 
-int calibrationChartBottomRight[15][2] = {
-	{10,2932},
+int calibrationChartBottomRight[21][2] = {
+	{7,3818},
+	{8,3452},
+	{9,3156},	
+	{10,2693},
+	{11,2809},
+	{13,2389},
 	{15,2096},
-	{20,1615},
-	{25,1326},
-	{30,1092},
-	{35,952},
-	{40,763},
-	{45,572},
-	{50,442},
-	{55,346},
-	{60,297},
-	{65,259},
-	{70,220},
-	{75,172},
-	{80,0}
+	{20,1640},
+	{25,1337},
+	{30,1113},
+	{35,932},
+	{40,764},
+	{45,641},
+	{50,492},
+	{55,421},
+	{60,338},
+	{65,300},
+	{70,245},
+	{75,240},
+	{80,165},
+	{85, 0}
 };
 
 int adcToDistance(int adcValue, int sensorNumber) {
 	if(sensorNumber == 0) {
-		for(int i = 0; i < 14; i++) {
+		for(int i = 0; i < 20; i++) {
 			if(adcValue <= calibrationChartBottomLeft[i][1])
 			{
 				if(adcValue > calibrationChartBottomLeft[i+1][1])
@@ -204,12 +228,12 @@ int adcToDistance(int adcValue, int sensorNumber) {
 						return -5*(adcValue-calibrationChartBottomLeft[i][1])/(calibrationChartBottomLeft[i][1]-calibrationChartBottomLeft[i+1][1])+calibrationChartBottomLeft[i][0];
 				}
 			}else{
-				return 10;
+				return 6;
 			}
 		}
 		return 80;
 	} else if(sensorNumber == 1) {
-		for(int i = 0; i < 14; i++) {
+		for(int i = 0; i < 20; i++) {
 			if(adcValue <= calibrationChartTopLeft[i][1])
 			{
 				if(adcValue > calibrationChartTopLeft[i+1][1])
@@ -217,12 +241,12 @@ int adcToDistance(int adcValue, int sensorNumber) {
 						//linear interpolate
 						return -5*(adcValue-calibrationChartTopLeft[i][1])/(calibrationChartTopLeft[i][1]-calibrationChartTopLeft[i+1][1])+calibrationChartTopLeft[i][0];
 				}
-			}else{
-				return 10;
+			} else {
+				return 6;
 			}
 		}
 	} else if(sensorNumber == 2) {
-		for(int i = 0; i < 14; i++) {
+		for(int i = 0; i < 20; i++) {
 			if(adcValue <= calibrationChartTopRight[i][1])
 			{
 				if(adcValue > calibrationChartTopRight[i+1][1])
@@ -231,11 +255,11 @@ int adcToDistance(int adcValue, int sensorNumber) {
 						return -5*(adcValue-calibrationChartTopRight[i][1])/(calibrationChartTopRight[i][1]-calibrationChartTopRight[i+1][1])+calibrationChartTopRight[i][0];
 				}
 			}else{
-				return 10;
+				return 6;
 			}
 		}
 	} else if(sensorNumber == 3) {
-				for(int i = 0; i < 14; i++) {
+		for(int i = 0; i < 20; i++) {
 			if(adcValue <= calibrationChartBottomRight[i][1])
 			{
 				if(adcValue > calibrationChartBottomRight[i+1][1])
@@ -244,7 +268,7 @@ int adcToDistance(int adcValue, int sensorNumber) {
 						return -5*(adcValue-calibrationChartBottomRight[i][1])/(calibrationChartBottomRight[i][1]-calibrationChartBottomRight[i+1][1])+calibrationChartBottomRight[i][0];
 				}
 			}else{
-				return 10;
+				return 6;
 			}
 		}
 	} 
@@ -262,8 +286,8 @@ unsigned long t;                  // time in 2.5 ms
 unsigned long myId = OS_Id(); 
 	DataLost = 0; 
   IR_Sensor_Init(FS, &Producer); // start ADC sampling, channel 5, PD2, 400 Hz
-  //numCreated += OS_AddThread(&Display,128,1);
-	numCreated += OS_AddThread(&StateMachine,128,1);	
+  numCreated += OS_AddThread(&Display,128,1);
+	//numCreated += OS_AddThread(&StateMachine,128,1);	
   while(NumSamples < RUNLENGTH - 32) { 
     for(t = 0; t < 64; t++){   // collect 64 ADC samples
       data = OS_Fifo_Get();    // get from producer - if we get stuck here then display may have been killed
@@ -307,6 +331,7 @@ IR_Data_Type distance;
 		//ST7735_Message(0,4,"v(mV) =",distance.TopRight);
 		//ST7735_Message(0,5,"v(mV) =",distance.BottomRight);
 		
+		
 		UART_OutString("DISTANCE -----------");
 		OutCRLF();
 		UART_OutUDec(distance.BottomLeft);
@@ -318,7 +343,7 @@ IR_Data_Type distance;
 		UART_OutUDec(distance.BottomRight);
 		OutCRLF();
 		
-		
+		/*
 		UART_OutString("ADC VAlue -----------");
 		OutCRLF();
 		UART_OutUDec(data.BottomLeft);
@@ -329,7 +354,7 @@ IR_Data_Type distance;
 		OutCRLF();
 		UART_OutUDec(data.BottomRight);
 		OutCRLF(); 
-		
+		*/
   }
 	LEDS = RED;
   OS_Kill();  // never called
@@ -522,7 +547,16 @@ void CanSendMessage(void) {
 void CANTest() {
   while(1){
     if(CAN0_GetMailNonBlock(RcvData)){
-      RcvCount++;
+			UART_OutChar(RcvData[0]);
+			UART_OutChar(RcvData[1]);
+			UART_OutChar(RcvData[2]);
+			UART_OutChar(RcvData[3]);
+			UART_OutChar(RcvData[4]);
+			UART_OutChar(RcvData[5]);
+			UART_OutChar(RcvData[6]);
+			UART_OutChar(RcvData[7]);
+			OutCRLF();
+			OS_Sleep(10);
     }
 	}	
 }
@@ -559,15 +593,15 @@ int main(void){
 	
 	ST7735_InitRDivided(INITR_REDTAB);
 	///periodic test
-	OS_AddPeriodicThread(StartPingSensorPB6_7, TIME_1MS,2);
+	//OS_AddPeriodicThread(StartPingSensorPB6_7, 50* TIME_1MS,2);
 	
 	//create initial foreground threads
 	
 	numCreated += OS_AddThread(&postLauntInits,128,1);
 	//numCreated += OS_AddThread(&Interpreter,128,5);
 	//numCreated += OS_AddThread(&CANTest,128,2);
-	//numCreated += OS_AddThread(&Consumer,128,2); 
-	numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
+	numCreated += OS_AddThread(&Consumer,128,2); 
+	//numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
 
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here

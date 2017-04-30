@@ -34,7 +34,7 @@
 
 // reverse these IDs on the other microcontroller
 #define RCV_ID 2
-#define XMT_ID 4
+#define XMT_ID 5
 // Returns true if receive data is available
 //         false if no receive data ready
 int CAN0_CheckMail(void);
