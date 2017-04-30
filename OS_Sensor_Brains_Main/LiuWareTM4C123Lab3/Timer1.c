@@ -60,9 +60,9 @@ void Timer1_Init(void(*task)(void), uint32_t period, uint32_t priority){
 // interrupts enabled in the main program after all devices initialized
 // vector number 37, interrupt number 21
 		// Jitter
-	FilterWorkT1 = 0;
-	PERIODT1 = period;
-	MaxJitterT1 = 0;
+	//FilterWorkT1 = 0;
+	//PERIODT1 = period;
+	//MaxJitterT1 = 0;
 	// -End Jitter
   NVIC_EN0_R = 1<<21;           // 9) enable IRQ 21 in NVIC
   TIMER1_CTL_R = 0x00000001 + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;    // 10) enable TIMER1A

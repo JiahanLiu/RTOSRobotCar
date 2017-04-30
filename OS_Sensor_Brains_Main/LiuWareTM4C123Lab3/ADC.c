@@ -88,16 +88,16 @@ int IR_Sensor_Init(uint32_t fs, void(*pTask)(IR_Data_Type data)) {
   //timer/adc config
 	DisableInterrupts();
   SYSCTL_RCGCADC_R |= 0x01;     // activate ADC0 
-  SYSCTL_RCGCTIMER_R |= 0x01;   // activate timer0 
+  SYSCTL_RCGCTIMER_R |= 0x04;   // activate timer0 
   delay = SYSCTL_RCGCTIMER_R;   // allow time to finish activating
-  TIMER0_CTL_R = 0x00000000;    // disable timer0A during setup
-  TIMER0_CTL_R |= 0x00000020;   // enable timer0A trigger to ADC
-  TIMER0_CFG_R = 0;             // configure for 32-bit timer mode
-  TIMER0_TAMR_R = 0x00000002;   // configure for periodic mode, default down-count settings
-  TIMER0_TAPR_R = 0;            // prescale value for trigger
-  TIMER0_TAILR_R = (80000000/fs)-1;        // start value for trigger
-  TIMER0_IMR_R = 0x00000000;    // disable all interrupts
-  TIMER0_CTL_R |= TIMER_CTL_TAEN + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;;   // enable timer0A 32-b, periodic, no interrupts
+  TIMER2_CTL_R = 0x00000000;    // disable timer0A during setup
+  TIMER2_CTL_R |= 0x00000020;   // enable timer0A trigger to ADC
+  TIMER2_CFG_R = 0;             // configure for 32-bit timer mode
+  TIMER2_TAMR_R = 0x00000002;   // configure for periodic mode, default down-count settings
+  TIMER2_TAPR_R = 0;            // prescale value for trigger
+  TIMER2_TAILR_R = (80000000/fs)-1;        // start value for trigger
+  TIMER2_IMR_R = 0x00000000;    // disable all interrupts
+  TIMER2_CTL_R |= TIMER_CTL_TAEN + TIMER_CTL_TASTALL + TIMER_CTL_TBSTALL;;   // enable timer0A 32-b, periodic, no interrupts
 	//adc config
   ADC0_PC_R = 0x01;         // configure for 125K samples/sec
   ADC0_SSPRI_R = 0x0123;    // sequencer 3 is highest, sequencer 0 is lowest
@@ -105,10 +105,10 @@ int IR_Sensor_Init(uint32_t fs, void(*pTask)(IR_Data_Type data)) {
   ADC0_EMUX_R = (ADC0_EMUX_R&0xFFFFF0FF)+0x0500; // timer trigger event
   ADC0_SSMUX2_R |= 0x3210;
   ADC0_SSCTL2_R = 0x6000;          // set flag and end    
-	ADC0_ACTSS_R |= 0x04;          // enable sample sequencer 0
+	ADC0_ACTSS_R |= 0x04;          // enable sample sequencer 2
   ADC0_IM_R |= 0x04;             // enable SS0 interrupts
-  NVIC_PRI4_R = (NVIC_PRI4_R&0xFFFFFF00)|0x00000040; //priority 2
-  NVIC_EN0_R = 1<<16;              // enable interrupt 16 in NVIC
+  NVIC_PRI4_R = (NVIC_PRI4_R&0xFFFFFF00)|0x00000040; //priority 2 -. ADC0 Seq 2
+  NVIC_EN0_R = 1<<16;              // enable interrupt 16 in NVIC -> ADC0 Seq 2
 
 	return 1;
 

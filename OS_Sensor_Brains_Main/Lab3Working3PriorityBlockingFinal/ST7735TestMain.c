@@ -67,26 +67,8 @@ unsigned long DataLost = 0;     // data sent by Producer, but not received by Co
 
 //debug variables
 unsigned long numCreated = 0;   // number of foreground threads created
-int numThreads = 0;
+int numThreads = 0; //not used but refered to in interpreter.o
 
-//------------------Interpreter--------------------------------
-// UART background ISR performs serial input/output
-// Two software fifos are used to pass I/O data to foreground
-// The interpreter runs as a foreground thread
-// The UART driver should call OS_Wait(&RxDataAvailable) when foreground tries to receive
-// The UART ISR should call OS_Signal(&RxDataAvailable) when it receives data from Rx
-// Similarly, the transmit channel waits on a semaphore in the foreground
-// and the UART ISR signals this semaphore (TxRoomLeft) when getting data from fifo
-// Modify your intepreter from Lab 1, adding commands to help debug 
-// Interpreter is a foreground thread, accepts input from serial port, outputs to serial port
-// inputs:  none
-// outputs: none
-
-void Interpreter(void) { //lab 1 thread				
-	while(1) {
-		ProcessCommand();
-	}
-}
 //*********Prototype for FFT in cr4_fft_64_stm32.s, STMicroelectronics
 void cr4_fft_64_stm32(void *pssOUT, void *pssIN, unsigned short Nbin);
 //*********Prototype for PID in PID_stm32.s, STMicroelectronics
@@ -108,37 +90,6 @@ unsigned long xTopLeft[64],yTopLeft[64];           // input and output arrays fo
 unsigned long xTopRight[64],yTopRight[64];           // input and output arrays for FFT
 unsigned long xBottomRight[64],yBottomRight[64];           // input and output arrays for FFT
 
-//------------------Display on Screen 2--------------------------------
-// background thread executes with SW1 button
-// one foreground task created with button push
-// foreground treads run for 2 sec and die
-// ***********ButtonWork*************
-void ButtonWork(void){
-	unsigned long myId = OS_Id(); 
-  ST7735_Message(1,0,"NumCreated =",numCreated); 
-  OS_Sleep(50);     // set this to sleep for 50msec
-  ST7735_Message(1,1,"PIDWork     =",PIDWork);
-  ST7735_Message(1,2,"DataLost    =",DataLost); 
-  ST7735_Message(1,3,"Jitter 0.1us=",getMaxJitterT1()); 
-  OS_Kill();  // done, OS does not return from a Kill
-} 
-
-//************SW1Push*************
-// Called when SW1 Button pushed
-// Adds another foreground task
-// background threads execute once and return
-void SW1Push(void){
-	numCreated += OS_AddThread(&ButtonWork,100,2);
-	OS_Kill();
-}
-//************SW2Push*************
-// Called when SW2 Button pushed, Lab 3 only
-// Adds another foreground task
-// background threads execute once and return
-void SW2Push(void){
-  numCreated += OS_AddThread(&ButtonWork,100,2);
-	OS_Kill();
-}
 //--------------------End of Display on Screen 2------------------------
 
 //------------------Hardware Triggered ADC--------------------------------
@@ -185,7 +136,7 @@ int calibrationChartBottomLeft[15][2] = {
 	{65,251},
 	{70,225},
 	{75,201},
-	{80,154}
+	{80,0}
 };
 
 int calibrationChartTopLeft[15][2] = {
@@ -203,7 +154,7 @@ int calibrationChartTopLeft[15][2] = {
 	{65,326},
 	{70,255},
 	{75,200},
-	{80,176}
+	{80,0}
 };
 
 int calibrationChartTopRight[15][2] = {
@@ -221,7 +172,7 @@ int calibrationChartTopRight[15][2] = {
 	{65,385},
 	{70,312},
 	{75,287},
-	{80,201}
+	{80,0}
 };
 
 int calibrationChartBottomRight[15][2] = {
@@ -239,7 +190,7 @@ int calibrationChartBottomRight[15][2] = {
 	{65,259},
 	{70,220},
 	{75,172},
-	{80,153}
+	{80,0}
 };
 
 int adcToDistance(int adcValue, int sensorNumber) {
@@ -297,6 +248,7 @@ int adcToDistance(int adcValue, int sensorNumber) {
 			}
 		}
 	} 
+	return -1;
 }
 //******** Consumer *************** 
 // foreground thread, accepts data from producer
@@ -310,8 +262,8 @@ unsigned long t;                  // time in 2.5 ms
 unsigned long myId = OS_Id(); 
 	DataLost = 0; 
   IR_Sensor_Init(FS, &Producer); // start ADC sampling, channel 5, PD2, 400 Hz
-  numCreated += OS_AddThread(&Display,128,1);
-	//numCreated += OS_AddThread(&StateMachine,128,1);	
+  //numCreated += OS_AddThread(&Display,128,1);
+	numCreated += OS_AddThread(&StateMachine,128,1);	
   while(NumSamples < RUNLENGTH - 32) { 
     for(t = 0; t < 64; t++){   // collect 64 ADC samples
       data = OS_Fifo_Get();    // get from producer - if we get stuck here then display may have been killed
@@ -341,7 +293,6 @@ unsigned long myId = OS_Id();
 void Display(void){
 IR_Data_Type data;
 IR_Data_Type distance;
-unsigned long myId2 = OS_Id(); 
   ST7735_Message(0,1,"Run length = ",(RUNLENGTH)/FS);   // top half used for Display
   while(NumSamples < RUNLENGTH - 32) {
 		IR_Data_Type tempData;
@@ -367,7 +318,7 @@ unsigned long myId2 = OS_Id();
 		UART_OutUDec(distance.BottomRight);
 		OutCRLF();
 		
-		/*
+		
 		UART_OutString("ADC VAlue -----------");
 		OutCRLF();
 		UART_OutUDec(data.BottomLeft);
@@ -378,7 +329,7 @@ unsigned long myId2 = OS_Id();
 		OutCRLF();
 		UART_OutUDec(data.BottomRight);
 		OutCRLF(); 
-		*/
+		
   }
 	LEDS = RED;
   OS_Kill();  // never called
@@ -395,6 +346,7 @@ uint8_t XmtData[8];
 uint8_t RcvData[8];
 uint32_t RcvCount=0;
 uint32_t lastState = 1;
+uint32_t reverseState = 0; //0 means left, 1 means right
 void StateMachine(void){ 
 IR_Data_Type data;
 IR_Data_Type distance;
@@ -407,8 +359,8 @@ unsigned long myId2 = OS_Id();
 		distance.TopLeft = adcToDistance(data.TopLeft, 1);
 		distance.TopRight = adcToDistance(data.TopRight, 2);
 		distance.BottomRight = adcToDistance(data.BottomRight, 3);
+	
 		
-		/*
 		UART_OutString("Start -----------");
 		OutCRLF();
 		UART_OutUDec(distance.BottomLeft);
@@ -419,63 +371,83 @@ unsigned long myId2 = OS_Id();
 		OutCRLF();
 		UART_OutUDec(distance.BottomRight);
 		OutCRLF();
-		*/
+		
 		
 		//CAN
 		
 		//straight case
-		if(inBetween(distance.BottomLeft, 15, 30) && inBetween(distance.BottomRight, 15, 30) 
-			&& inBetween(distance.TopLeft, 25, 55) && inBetween(distance.TopLeft, 25, 55)) {
+		if(distance.BottomLeft - distance.BottomRight < 17) {
 			if(lastState == 1) {				
 				XmtData[0] = 1;//PF0<<1;  // 0 or 2
 				CAN0_SendData(XmtData);
 				OS_Sleep(1);
 			}
 			lastState = 1;
-		//slight left
-		} else if(inBetween(distance.BottomLeft, 10, 15)  
-			&& inBetween(distance.TopLeft, 25, 55) && inBetween(distance.TopLeft, 25, 55)) {
+		//hard left
+		} else if( (inBetween(distance.BottomLeft, 50, 81) && (distance.BottomLeft > distance.BottomRight))
+				) { //must put 81 not 80 because of bounding in inBetween
+			if(lastState == 4) {				
+				XmtData[0] = 4;//PF0<<1;  // 0 or 2
+				CAN0_SendData(XmtData);
+				reverseState = 0;
+				//UART_OutString("Hard Left");
+				//OutCRLF();
+				OS_Sleep(1);
+			}
+			lastState = 4;
+		//hard right
+		} else if( (inBetween(distance.BottomRight, 50, 81) && (distance.BottomRight > distance.BottomLeft)) 
+					) { //must put 81 not 80 because of bounding in inBetween
+			if(lastState == 5) {				
+				XmtData[0] = 5;//PF0<<1;  // 0 or 2
+				CAN0_SendData(XmtData);
+				reverseState = 1;
+				//UART_OutString("Hard Right");
+				//OutCRLF();
+				OS_Sleep(1);
+			}
+			lastState = 5;
+			//slight left
+		} else if(inBetween(distance.BottomRight, 11, 17)) {
 			if(lastState == 2) {				
 				XmtData[0] = 2;//PF0<<1;  // 0 or 2
 				CAN0_SendData(XmtData);
+				reverseState = 0;
+				//UART_OutString("Slight Left");
+				//OutCRLF();
 				OS_Sleep(1);
 			}
 			lastState = 2;
 		//slight right
-		} else if(inBetween(distance.BottomRight, 10, 15)  
-			&& inBetween(distance.TopLeft, 25, 55) && inBetween(distance.TopLeft, 25, 55)) {
+		} else if(inBetween(distance.BottomLeft, 11, 17)) {
 			if(lastState == 3) {				
 				XmtData[0] = 3;//PF0<<1;  // 0 or 2
 				CAN0_SendData(XmtData);
+				reverseState = 1;
+				//UART_OutString("Slight Right");
+				//OutCRLF();
 				OS_Sleep(1);
 			}
 			lastState = 3;
-		//big left
-		} else if(inBetween(distance.TopLeft, 55, 81)) { //must put 81 not 80 because of bounding in inBetween
-			if(lastState == 4) {				
-				XmtData[0] = 4;//PF0<<1;  // 0 or 2
-				CAN0_SendData(XmtData);
-				OS_Sleep(1);
-			}
-			lastState = 4;
-		//big right
-		} else if(inBetween(distance.TopRight, 55, 81)) { //must put 81 not 80 because of bounding in inBetween
-			if(lastState == 5) {				
-				XmtData[0] = 5;//PF0<<1;  // 0 or 2
-				CAN0_SendData(XmtData);
-				OS_Sleep(1);
-			}
-			lastState = 5;
-		} else if(inBetween(distance.TopLeft, 10, 15) && inBetween(distance.TopLeft, 10, 15)) {
+		//reverse
+		} else if(inBetween(distance.TopLeft, 10, 13) || inBetween(distance.TopRight, 10, 13) ) {
 			if(lastState == 0) {				
-				XmtData[0] = 0;//PF0<<1;  // 0 or 2
-				CAN0_SendData(XmtData);
-				OS_Sleep(1);
+				if(reverseState == 0) { //left
+					XmtData[0] = 6;//PF0<<1;  // 0 or 2
+					CAN0_SendData(XmtData);
+					//UART_OutString("Reverse Left");
+					//OutCRLF();
+					OS_Sleep(1);
+				} else {
+					XmtData[0] = 7;//PF0<<1;  // 0 or 2
+					CAN0_SendData(XmtData);
+					//UART_OutString("Reverse Right");
+					//OutCRLF();
+					OS_Sleep(1);
+				}
 			}
 			lastState = 0;
-		//slight left
 		}
-		
   }
 	LEDS = RED;
   OS_Kill();  // never called
@@ -522,7 +494,16 @@ extern unsigned int pulsePeriodPing6_7;
 extern int pingPB6_7_ready;
 void PingTest(void) {
 	Timer0A_Init();
-	StartPingSensorPB6_7();
+	while(1) {
+		if(pingPB6_7_ready == 1) {
+			pingPB6_7_ready = 0;
+			UART_OutString("Ping: ");
+			OutCRLF();
+			UART_OutUDec((343 * pulsePeriodPing6_7)/1600000); //accurate for close distances
+			OutCRLF();
+			OS_Sleep(1000);
+		}
+	}
 }
 
 uint8_t sequenceNum=0;  
@@ -553,7 +534,7 @@ void postLauntInits(){
 	//Timer4_Init(&UserTask, 1600000); // initialize timer3 (10 Hz) // Sleep
 	EndCritical(sr);
 	UART_Init();
-	UART_OutString("Hello Lab 6.0.1");
+	//UART_OutString("Hello Lab 6.0.1");
 	OutCRLF();
 	OS_Kill();
 }
@@ -578,16 +559,16 @@ int main(void){
 	
 	ST7735_InitRDivided(INITR_REDTAB);
 	///periodic test
+	OS_AddPeriodicThread(StartPingSensorPB6_7, TIME_1MS,2);
 	
 	//create initial foreground threads
 	
 	numCreated += OS_AddThread(&postLauntInits,128,1);
 	//numCreated += OS_AddThread(&Interpreter,128,5);
 	//numCreated += OS_AddThread(&CANTest,128,2);
-	numCreated += OS_AddThread(&Consumer,128,2); 
-	//numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
+	//numCreated += OS_AddThread(&Consumer,128,2); 
+	numCreated += OS_AddThread(&PingTest,128,2);  // Lab 3, make this lowest priority
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
-	//numCreated += OS_AddThread(&ReadIRSensor,128,2);
 
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
   return 0;            // this never executes

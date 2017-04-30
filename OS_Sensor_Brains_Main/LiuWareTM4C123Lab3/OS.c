@@ -300,6 +300,7 @@ unsigned long OS_Id(void) {
 // In lab 3, this command will be called 0 1 or 2 times
 // In lab 3, there will be up to four background threads, and this priority field 
 //           determines the relative priority of these four threads
+//only uses timer1
 int numPeriodicThreads = 0; 
 int OS_AddPeriodicThread(void(*task)(void), unsigned long period, unsigned long priority) {
 	if(numPeriodicThreads == 0) {

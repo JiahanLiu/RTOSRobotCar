@@ -229,6 +229,20 @@ void MotorTest() {
   }
 }
 
+void setPowerForwardSlowest() {
+	Power = POWERMIN;     // PWMclock at 1.25MHz
+	Power = Power + POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+}
+
+void setPowerBackwardSlowest() {
+	Power = POWERMAX;     // PWMclock at 1.25MHz
+	Power = Power + POWERDELTA;
+	Left_DutyB(Power,0);       // 400 to 12400 (positive logic)
+	Right_DutyB(12500-Power,0);  // 12400 to 400 (negative logic)
+}
+
 void stop() {
 	Power = POWERMIN;     // PWMclock at 1.25MHz
 	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
@@ -239,26 +253,53 @@ void stop() {
 void straight() {
 	Steering = SERVOMID;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerForwardSlowest();
 }
 
 void slightLeft() {
-	Steering = SERVOMID - SERVODELTA;
+	Steering = SERVOMID + SERVODELTA/2;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerForwardSlowest();
 }
 
 void slightRight() {
-	Steering = SERVOMID + SERVODELTA;
+	Steering = SERVOMID - SERVODELTA/2;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerForwardSlowest();
+
 }
 
 void HardLeft() {
-	Steering = SERVOMIN;
+	Steering = SERVOMAX - SERVODELTA;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerForwardSlowest();		
+	
+		Power = POWERMIN;
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+		Power = POWERMIN + 2 * POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
 }
 
 void HardRight() {
-	Steering = SERVOMAX;
+	Steering = SERVOMIN;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerForwardSlowest();
+	Power = POWERMIN;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+			Power = POWERMIN + POWERDELTA * 2;
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+}
+
+void BackLeft() {
+	Steering = SERVOMID;
+	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerBackwardSlowest();
+}
+
+void BackRight() {
+	Steering = SERVOMID - SERVODELTA;
+	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	setPowerBackwardSlowest();
 }
 
 void MotorTestLab7B() {
@@ -275,7 +316,6 @@ void MotorTestLab7B() {
 	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
 	while(1){
 	  if(CAN0_GetMailNonBlock(RcvData)){
-			
 			switch(RcvData[0]) {
 				case 0: //stop
 					stop();
@@ -295,6 +335,11 @@ void MotorTestLab7B() {
 				case 5:
 					HardRight();
 					break;
+				case 6: 
+					BackLeft();
+					break;
+				case 7:
+					BackRight();				
 			}
 		}
 	}
