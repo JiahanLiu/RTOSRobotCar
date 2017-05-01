@@ -180,54 +180,17 @@ void PortF_Init(void){
   LEDS = 0;                        // turn all LEDs off
 }
 
-void WaitForTouch(void){
-  while((PF0==0x01)&&(PF4==0x10)){};  // wait for switch
-  DelayWait10msMOTOR(2); // debounce
-  while((PF0!=0x01)||(PF4!=0x10)){}; // wait for both release
-  DelayWait10msMOTOR(2); // debounce
+typedef enum
+{
+    STRAIGHT,
+		SLIGHTLEFT,
+		HARDLEFT,
+		SLIGHTRIGHT,
+		HARDRIGHT,
+		REVERSELEFT,
+		REVERSERIGHT
 }
-
-void MotorTest() {
-	Power = 5;
-  Steering = SERVOMID;  // 20ms period 1.5ms pulse
-  SteeringMode = 0;
-  Left_Init(12500, Power,0);          // initialize PWM0, 100 Hz
-  Right_Init(12500, 12500-Power,1);   // initialize PWM0, 100 Hz
-  Servo_Init(25000, Steering);   
-	Power = POWERMIN;     // PWMclock at 1.25MHz
-  while(1){
-    while((PF0==0x01)&&(PF4==0x10)){};
-    if(PF0==0){
-      if(SteeringMode){
-        if(Steering >= SERVOMIN+SERVODELTA){
-          Steering = Steering - SERVODELTA;
-        }else{
-          Steering = SERVOMID; // go to center and
-          SteeringMode = 0;    // switch direction
-        }
-      }else{
-        Steering = Steering + SERVODELTA;
-        if(Steering > SERVOMAX){
-          Steering = SERVOMID; // go to center and
-          SteeringMode = 1;    // switch direction
-        }
-      }
-      Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-      PF1 ^= 0x02;
-    }
-    if((PF0==0x01)&&(PF4==0)){
-      Power = Power + POWERDELTA;
-      if(Power > POWERMAX){
-        Power = POWERMIN;      // go back to minimum
-      }
-      PF2 ^= 0x04;
-      Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-    //  Right_Duty(Power,0);       // 400 to 12400 (positive logic)
-      Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-    }
-    WaitForTouch();
-  }
-}
+DirectionEnum;
 
 void setPowerForwardSlowest() {
 	Power = POWERMIN;     // PWMclock at 1.25MHz
@@ -250,56 +213,130 @@ void stop() {
 	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
 }
 
-void straight() {
+void straight(int pServo, int pLeft, int pRight) {
+	int PowerRight;
+	int PowerLeft;
+	
 	Steering = SERVOMID;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-	setPowerForwardSlowest();
-}
-
-void slightLeft() {
-	Steering = SERVOMID + SERVODELTA/2;
-	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-	setPowerForwardSlowest();
-}
-
-void slightRight() {
-	Steering = SERVOMID - SERVODELTA/2;
-	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-	setPowerForwardSlowest();
-
-}
-
-void HardLeft() {
-	Steering = SERVOMAX - SERVODELTA;
-	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-	setPowerForwardSlowest();		
 	
-		Power = POWERMIN;
+	PowerRight = POWERMIN;     // PWMclock at 1.25MHz
+	PowerRight = Power + pRight * POWERDELTA;
 	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-		Power = POWERMIN + 2 * POWERDELTA;
+	
+	PowerLeft = POWERMIN;     // PWMclock at 1.25MHz
+	PowerLeft = Power + pLeft * POWERDELTA;
 	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
 }
 
-void HardRight() {
-	Steering = SERVOMIN;
+void slightLeft(int pServo, int pLeft, int pRight) {
+	int PowerRight;
+	int PowerLeft;
+	
+	Steering = SERVOMID + pServo * SERVODELTA;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-	setPowerForwardSlowest();
-	Power = POWERMIN;
-	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-			Power = POWERMIN + POWERDELTA * 2;
+	
+	PowerRight = POWERMIN + pRight * POWERDELTA;
 	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+	
+	PowerLeft = POWERMIN + pLeft * POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
 }
 
-void BackLeft() {
+void slightRight(int pServo, int pLeft, int pRight) {
+	int PowerRight;
+	int PowerLeft;
+	
+	Steering = SERVOMID - pServo * SERVODELTA;
+	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	
+	PowerRight = POWERMIN + pRight * POWERDELTA;
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+	
+	PowerLeft = POWERMIN + pLeft * POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+}
+
+void HardLeft(int pServo, int pLeft, int pRight) {
+	int PowerRight;
+	int PowerLeft;
+	
+	Steering = SERVOMID + pServo * SERVODELTA;
+	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	
+	PowerRight = POWERMIN;
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+	
+	PowerLeft = POWERMIN + pLeft * POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+}
+
+void HardRight(int pServo, int pLeft, int pRight) {
+	int PowerRight;
+	int PowerLeft;
+	
+	Steering = SERVOMID - pServo * SERVODELTA;
+	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
+	
+	PowerRight = POWERMIN;
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+	
+	PowerLeft = POWERMIN + pRight * POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+}
+
+void ReverseLeft(int pServo, int pLeft, int pRight) {
 	Steering = SERVOMID;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
 	setPowerBackwardSlowest();
 }
 
-void BackRight() {
+void ReverseRight(int pServo, int pLeft, int pRight) {
 	Steering = SERVOMID - SERVODELTA;
 	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
 	setPowerBackwardSlowest();
+}
+
+
+void MotorFinal() {
+	Power = 5;
+  Steering = SERVOMID;  // 20ms period 1.5ms pulse
+  SteeringMode = 0;
+  Left_Init(12500, Power,0);          // initialize PWM0, 100 Hz
+  Right_Init(12500, 12500-Power,1);   // initialize PWM0, 100 Hz
+  Servo_Init(25000, Steering);   
+	Power = POWERMIN;     // PWMclock at 1.25MHz
+	Power = Power + POWERDELTA;
+	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
+	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
+	while(1){
+	  if(CAN0_GetMailNonBlock(RcvData)){
+			switch(RcvData[0]) {
+				case STRAIGHT: //stop
+					straight(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case SLIGHTLEFT:
+					slightLeft(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case HARDLEFT:
+					HardLeft(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case SLIGHTRIGHT:
+					slightRight(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case HARDRIGHT:
+					HardRight(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case REVERSELEFT:
+					ReverseLeft(RcvData[1], RcvData[2],RcvData[3]);
+					break;
+				case REVERSERIGHT: 
+					ReverseRight(RcvData[1], RcvData[2],RcvData[3]);
+			}
+		}
+	}
+	LEDS = RED;
+	while(1) {}
 }
 
 void MotorTestLab7B() {
@@ -347,86 +384,6 @@ void MotorTestLab7B() {
 	while(1) {}
 }
 
-void MotorTestLab7ALeftTurn() {
-	uint32_t LeftPower = 5;
-  uint32_t RightPower = 5;
-	Steering = SERVOMID;  // 20ms period 1.5ms pulse
-  SteeringMode = 0;
-  Left_Init(12500, Power,0);          // initialize PWM0, 100 Hz
-  Right_Init(12500, 12500-Power,1);   // initialize PWM0, 100 Hz
-  Servo_Init(25000, Steering);   
-	Power = POWERMIN;     // PWMclock at 1.25MHz
-	Power = Power + POWERDELTA;
-	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-//  Right_Duty(Power,0);       // 400 to 12400 (positive logic)
-	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-	
-	//start 
-
-	Steering = SERVOMAX; //max is left
-	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX	
-	while(1){};
-	while(1){
-	  if(CAN0_GetMailNonBlock(RcvData)){
-			if(RcvData[0] == 'L') {
-				Steering = SERVOMIN;
-				Servo_Duty(Steering);    // SERVOMIN to SERVOMAX
-			}
-			if(RcvData[0] == 'R') {
-				Power= POWERMIN;
-				Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-				Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-			}
-			if(RcvData[0] == 'S') {
-				Power= POWERMIN;
-				Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-				Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-			}							
-    }
-	}
-	LEDS = RED;
-	while(1) {}
-}
-
-
-void MotorTestLab7AFinal() {
-	uint32_t LeftPower = 5;
-  uint32_t RightPower = 5;
-	Steering = SERVOMID;  // 20ms period 1.5ms pulse
-  SteeringMode = 0;
-  Left_Init(12500, Power,0);          // initialize PWM0, 100 Hz
-  Right_Init(12500, 12500-Power,1);   // initialize PWM0, 100 Hz
-  Servo_Init(25000, Steering);   
-	Power = POWERMIN;     // PWMclock at 1.25MHz
-	Power = Power + POWERDELTA;
-	Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-//  Right_Duty(Power,0);       // 400 to 12400 (positive logic)
-	Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-	Steering = SERVOMID; //max is left
-	Servo_Duty(Steering);    // SERVOMIN to SERVOMAX	
-	while(1){
-	  if(CAN0_GetMailNonBlock(RcvData)){
-			if(RcvData[0] == 'L') {
-				Steering = SERVOMAX; //max is left
-				Servo_Duty(Steering);    // SERVOMIN to SERVOMAX	
-			}
-			if(RcvData[0] == 'R') {
-				Power= POWERMIN;
-				Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-				Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-			}
-			if(RcvData[0] == 'S') {
-				Power= POWERMIN;
-				Left_Duty(Power,0);       // 400 to 12400 (positive logic)
-				Right_Duty(12500-Power,1);  // 12400 to 400 (negative logic)
-			}							
-    }
-	}
-	LEDS = RED;
-	while(1) {}
-}
-
-
 void postLauntInits(){
 	long sr = StartCritical();
 	CAN0_Open();
@@ -434,8 +391,8 @@ void postLauntInits(){
 	EndCritical(sr);
 	PortF_Init();
 	UART_Init();
-	UART_OutString("Hello Lab 6.0.1");
-	OutCRLF();
+	//UART_OutString("Hello Lab 6.0.1");
+	//OutCRLF();
 	OS_Kill();
 }
 
@@ -469,7 +426,7 @@ int main(void){
 	//numCreated += OS_AddThread(&Interpreter,128,5);
 	//numCreated += OS_AddThread(&CANTest,128,2);
 	//numCreated += OS_AddThread(&Consumer,128,2); 
-	numCreated += OS_AddThread(&MotorTestLab7B,128,2);  // Lab 3, make this lowest priority
+	numCreated += OS_AddThread(&MotorFinal,128,2);  // Lab 3, make this lowest priority
 	//numCreated += OS_AddThread(&MotorTestLab7AFinal,128,2);  // Lab 3, make this lowest priority
   numCreated += OS_AddThread(&PID,128,6);  // Lab 3, make this lowest priority
 

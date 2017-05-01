@@ -309,6 +309,43 @@ unsigned long myId = OS_Id();
 	LEDS = RED;
   OS_Kill();  // never called
 }
+
+void uartIRData(IR_Data_Type pData, int pingData) {
+		UART_OutString("ADC VAlue -----------");
+		OutCRLF();
+		UART_OutUDec(pData.BottomLeft);
+		OutCRLF();
+		UART_OutUDec(pData.TopLeft);
+		OutCRLF();
+		UART_OutUDec(pingData);
+		OutCRLF();
+		UART_OutUDec(pData.TopRight);
+		OutCRLF();
+		UART_OutUDec(pData.BottomRight);
+		OutCRLF(); 
+}
+
+void Delay1ms(uint32_t n);
+
+void LCDIRData(IR_Data_Type pData, int pingData) {
+		ST7735_MessageString(0, 0, "Values -----------");	
+		Delay1ms(50);
+		ST7735_MessageDec(0, 1, pData.BottomLeft);
+		Delay1ms(50);
+		ST7735_MessageDec(0, 2, pData.TopLeft);
+		Delay1ms(50);
+		ST7735_MessageDec(0, 3, pingData);
+		Delay1ms(50);
+		ST7735_MessageDec(0, 4, pData.TopRight);
+		Delay1ms(50);
+		ST7735_MessageDec(0, 5, pData.BottomRight);
+}
+
+//ping
+extern unsigned int pulsePeriodPing6_7;
+extern int pingPB6_7_ready;
+//end ping
+
 //******** Display *************** 
 // foreground thread, accepts data from consumer
 // displays calculated results on the LCD
@@ -317,7 +354,7 @@ unsigned long myId = OS_Id();
 void Display(void){
 IR_Data_Type data;
 IR_Data_Type distance;
-  ST7735_Message(0,1,"Run length = ",(RUNLENGTH)/FS);   // top half used for Display
+int pingDistance; 
   while(NumSamples < RUNLENGTH - 32) {
 		IR_Data_Type tempData;
     tempData = OS_MailBox_Recv();
@@ -326,35 +363,17 @@ IR_Data_Type distance;
 		distance.TopLeft = adcToDistance(data.TopLeft, 1);
 		distance.TopRight = adcToDistance(data.TopRight, 2);
 		distance.BottomRight = adcToDistance(data.BottomRight, 3);
-    //ST7735_Message(0,2,"v(mV) =",distance.BottomLeft);
-		//ST7735_Message(0,3,"v(mV) =",distance.TopLeft);
-		//ST7735_Message(0,4,"v(mV) =",distance.TopRight);
-		//ST7735_Message(0,5,"v(mV) =",distance.BottomRight);
 		
+		//ping
+		if(pingPB6_7_ready == 1) {
+			pingPB6_7_ready = 0;
+			pingDistance = (343 * pulsePeriodPing6_7)/1600000;
+		}
 		
-		UART_OutString("DISTANCE -----------");
-		OutCRLF();
-		UART_OutUDec(distance.BottomLeft);
-		OutCRLF();
-		UART_OutUDec(distance.TopLeft);
-		OutCRLF();
-		UART_OutUDec(distance.TopRight);
-		OutCRLF();
-		UART_OutUDec(distance.BottomRight);
-		OutCRLF();
-		
-		/*
-		UART_OutString("ADC VAlue -----------");
-		OutCRLF();
-		UART_OutUDec(data.BottomLeft);
-		OutCRLF();
-		UART_OutUDec(data.TopLeft);
-		OutCRLF();
-		UART_OutUDec(data.TopRight);
-		OutCRLF();
-		UART_OutUDec(data.BottomRight);
-		OutCRLF(); 
-		*/
+		//display
+		//LCDIRData(distance, pingDistance);
+		uartIRData(distance, pingDistance);
+		//uartIRData(data, pingDistance);
   }
 	LEDS = RED;
   OS_Kill();  // never called
@@ -367,16 +386,113 @@ int inBetween(int value, int low, int high) {
 	return 0;
 }
 
+typedef enum
+{
+    BOTTOMLEFTMIN,
+    BOTTOMLEFTMAX,
+		TOPLEFTMIN,
+		TOPLEFTMAX,
+		PINGMIN,
+		PINGMAX,
+		TOPRIGHTMIN,
+		TOPRIGHTMAX,
+		BOTTOMRIGHTMIN,
+		BOTTOMRIGHTMAX,
+		BOTTOMLEFTDIFFERENCEMIN,
+		BOTTOMLEFTDIFFERENCEMAX,
+		BOTTOMRIGHTIFFERENCEMIN,
+		BOTTOMRIGHTIFFERENCEMAX,
+		TOPLEFTDIFFERENCEMIN,
+		TOPLEFTDIFFERENCEMAX,
+		TOPMRIGHTDIFFERENCEMIN,
+		TOPMRIGHTDIFFERENCEMAX,
+		DIRECTION,
+		SERVOMAGNITUDE,
+		LEFTMOTORMAGITUDE,
+		RIGHTMOTORMAGNITUDE,
+		LUTWIDTH
+}
+LutEnum;
+
+typedef enum
+{
+    STRAIGHT,
+		SLIGHTLEFT,
+		HARDLEFT,
+		SLIGHTRIGHT,
+		HARDRIGHT,
+		REVERSELEFT,
+		REVERSERIGHT
+}
+DirectionEnum;
+
+#define LUTLENGH 5
+
+int CONTROL_LUT[LUTLENGH][LUTWIDTH] = {                      //Difference
+	//{BottomLeft Min, BottomLeft Max, TopLeftMin, TopLeftMax, Ping Min, Ping Max, TopRightMin, TopRightMax, BottomRight Min, BottomRight Max, Bottom Difference Min, Bottom Difference Max, Top Difference Min, Top Difference Max, Direction, ServoMagnitude, LeftMotor, RightMotor}
+//{BLMn, BLMx, TLMn, TLMx, PMn, PMx, TRMn, TRMx, BRMn, BRMx, BLDMn, BLDMx, BRDMn, BRDMx, TLDMn, TLDMx, TRDMn, TRDMx, Servo, LMotor, RMotor}
+//{0,    85,   0,    85,   0,   85,  0,    85,   0,    85,   0,     85,    0,     85,    0,     85,    0,     85,    0,     1,      1,    },
+	{0,    85,   0,    85,   0,   85,  0,    85,   0,    85,   0,     16,    0,     16,    0,     85,    0,     85,    0,     1,      1,    },
+	{0,    85,   0,    85,   0,   85,  0,    85,   0,    85,   0,     16,    0,     16,    0,     85,    0,     85,    0,     1,      1,    },
+};
+
+int abs(int num1, int num2) {
+	if(num1 >= num2) {
+		return num1 - num2;
+	} else {
+		return num2 - num1;
+	}
+}
+
+int greaterSubs (int greater, int less) {
+	if(greater >= less) {
+		return greater - less;
+	} else {
+		return 0;
+	}
+}
+
+int findIndexLUT(IR_Data_Type pDistance, int pPingDistance) {
+	int index = -1;
+	for(int i = 0; i < LUTLENGH; i++) {
+		if(pDistance.BottomLeft >= CONTROL_LUT[i][BOTTOMLEFTMIN]
+			&& pDistance.BottomLeft <= CONTROL_LUT[i][BOTTOMLEFTMAX]
+			&& pDistance.TopLeft >= CONTROL_LUT[i][TOPLEFTMIN]
+			&& pDistance.TopLeft <= CONTROL_LUT[i][TOPLEFTMAX]
+			&& pPingDistance >= CONTROL_LUT[i][PINGMIN]
+			&& pPingDistance <= CONTROL_LUT[i][PINGMAX]
+			&& pDistance.TopRight >= CONTROL_LUT[i][TOPRIGHTMIN]
+			&& pDistance.TopRight <= CONTROL_LUT[i][TOPRIGHTMAX]
+			&& pDistance.BottomRight >= CONTROL_LUT[i][BOTTOMRIGHTMIN]
+			&& pDistance.BottomRight <= CONTROL_LUT[i][BOTTOMRIGHTMAX]
+			&& greaterSubs(pDistance.BottomLeft, pDistance.BottomRight)  >= CONTROL_LUT[i][BOTTOMLEFTDIFFERENCEMIN]
+			&& greaterSubs(pDistance.BottomLeft, pDistance.BottomRight)  <= CONTROL_LUT[i][BOTTOMLEFTDIFFERENCEMAX]
+			&& greaterSubs(pDistance.BottomRight, pDistance.BottomLeft)  >= CONTROL_LUT[i][BOTTOMRIGHTIFFERENCEMIN]
+			&& greaterSubs(pDistance.BottomRight, pDistance.BottomLeft)  <= CONTROL_LUT[i][BOTTOMRIGHTIFFERENCEMAX]
+			&& greaterSubs(pDistance.TopLeft, pDistance.TopRight)  >= CONTROL_LUT[i][TOPLEFTDIFFERENCEMIN]
+			&& greaterSubs(pDistance.TopLeft, pDistance.TopRight)  >= CONTROL_LUT[i][TOPLEFTDIFFERENCEMAX]
+			&& greaterSubs(pDistance.TopRight, pDistance.TopLeft)  >= CONTROL_LUT[i][TOPMRIGHTDIFFERENCEMIN]
+			&& greaterSubs(pDistance.TopRight, pDistance.TopLeft)  >= CONTROL_LUT[i][TOPMRIGHTDIFFERENCEMAX]
+		) {
+			index = i;
+		}
+	}
+	return index;
+}
+
 uint8_t XmtData[8];
 uint8_t RcvData[8];
 uint32_t RcvCount=0;
 uint32_t lastState = 1;
 uint32_t reverseState = 0; //0 means left, 1 means right
+int oldLutIndex = -1;
+int newLutIndex;
 void StateMachine(void){ 
 IR_Data_Type data;
 IR_Data_Type distance;
-unsigned long myId2 = OS_Id(); 
+int pingDistance; 
   while(NumSamples < RUNLENGTH - 32) {
+		//IR Sensors
 		IR_Data_Type tempData;
     tempData = OS_MailBox_Recv();
     data = tempData;
@@ -384,95 +500,106 @@ unsigned long myId2 = OS_Id();
 		distance.TopLeft = adcToDistance(data.TopLeft, 1);
 		distance.TopRight = adcToDistance(data.TopRight, 2);
 		distance.BottomRight = adcToDistance(data.BottomRight, 3);
-	
 		
-		UART_OutString("Start -----------");
-		OutCRLF();
-		UART_OutUDec(distance.BottomLeft);
-		OutCRLF();
-		UART_OutUDec(distance.TopLeft);
-		OutCRLF();
-		UART_OutUDec(distance.TopRight);
-		OutCRLF();
-		UART_OutUDec(distance.BottomRight);
-		OutCRLF();
+		//ping
+		if(pingPB6_7_ready == 1) {
+			pingPB6_7_ready = 0;
+			pingDistance = (343 * pulsePeriodPing6_7)/1600000;
+		}
+		
+		//uartIRData(distance);
 		
 		
 		//CAN
+		newLutIndex = findIndexLUT(distance, pingDistance);
+		if(newLutIndex != oldLutIndex) {
+			oldLutIndex = newLutIndex;
+			XmtData[0] = CONTROL_LUT[newLutIndex][DIRECTION];
+			XmtData[1] = CONTROL_LUT[newLutIndex][SERVOMAGNITUDE];
+			XmtData[2] = CONTROL_LUT[newLutIndex][LEFTMOTORMAGITUDE];
+			XmtData[3] = CONTROL_LUT[newLutIndex][RIGHTMOTORMAGNITUDE];
+			// if(CONTROL_LUT[newLutIndex][DIRECTION] == SLIGHTLEFT || CONTROL_LUT[newLutIndex][DIRECTION]) - impliments reversing
+			CAN0_SendData(XmtData);
+			OS_Sleep(1);
+		}
 		
-		//straight case
+		/*
+		//CASE: Straight case
 		if(distance.BottomLeft - distance.BottomRight < 17) {
-			if(lastState == 1) {				
-				XmtData[0] = 1;//PF0<<1;  // 0 or 2
+			if(lastState != 1) {				
+				XmtData[0] = 1;
 				CAN0_SendData(XmtData);
+				lastState = 1;
 				OS_Sleep(1);
-			}
-			lastState = 1;
-		//hard left
+		}
+		
+		//CASE: Hard Left
 		} else if( (inBetween(distance.BottomLeft, 50, 81) && (distance.BottomLeft > distance.BottomRight))
-				) { //must put 81 not 80 because of bounding in inBetween
-			if(lastState == 4) {				
-				XmtData[0] = 4;//PF0<<1;  // 0 or 2
+					) { //must put 81 not 80 because of bounding in inBetween
+			if(lastState != 4) {				
+				XmtData[0] = 4;
 				CAN0_SendData(XmtData);
 				reverseState = 0;
+				lastState = 4;
+				OS_Sleep(1);
 				//UART_OutString("Hard Left");
 				//OutCRLF();
-				OS_Sleep(1);
 			}
-			lastState = 4;
-		//hard right
+		//CASE: Hard Right
 		} else if( (inBetween(distance.BottomRight, 50, 81) && (distance.BottomRight > distance.BottomLeft)) 
 					) { //must put 81 not 80 because of bounding in inBetween
-			if(lastState == 5) {				
-				XmtData[0] = 5;//PF0<<1;  // 0 or 2
+			if(lastState != 5) {				
+				XmtData[0] = 5;
 				CAN0_SendData(XmtData);
 				reverseState = 1;
+				lastState = 5;
+				OS_Sleep(1);
 				//UART_OutString("Hard Right");
 				//OutCRLF();
-				OS_Sleep(1);
 			}
-			lastState = 5;
-			//slight left
+		//CASE: Slight Left
 		} else if(inBetween(distance.BottomRight, 11, 17)) {
-			if(lastState == 2) {				
-				XmtData[0] = 2;//PF0<<1;  // 0 or 2
+			if(lastState != 2) {				
+				XmtData[0] = 2;
 				CAN0_SendData(XmtData);
 				reverseState = 0;
+				lastState = 2;
+				OS_Sleep(1);
 				//UART_OutString("Slight Left");
 				//OutCRLF();
-				OS_Sleep(1);
 			}
-			lastState = 2;
-		//slight right
+		//CASE: Slight Right
 		} else if(inBetween(distance.BottomLeft, 11, 17)) {
-			if(lastState == 3) {				
-				XmtData[0] = 3;//PF0<<1;  // 0 or 2
+			if(lastState != 3) {				
+				XmtData[0] = 3;
 				CAN0_SendData(XmtData);
 				reverseState = 1;
+				lastState = 3;
+				OS_Sleep(1);
 				//UART_OutString("Slight Right");
 				//OutCRLF();
-				OS_Sleep(1);
 			}
-			lastState = 3;
-		//reverse
+		//CASE: reverse
 		} else if(inBetween(distance.TopLeft, 10, 13) || inBetween(distance.TopRight, 10, 13) ) {
 			if(lastState == 0) {				
 				if(reverseState == 0) { //left
-					XmtData[0] = 6;//PF0<<1;  // 0 or 2
+					XmtData[0] = 6;
 					CAN0_SendData(XmtData);
+					lastState = 0;
+					OS_Sleep(1);
 					//UART_OutString("Reverse Left");
 					//OutCRLF();
-					OS_Sleep(1);
 				} else {
-					XmtData[0] = 7;//PF0<<1;  // 0 or 2
+					XmtData[0] = 7;
 					CAN0_SendData(XmtData);
+					lastState = 0;
+					OS_Sleep(1);
 					//UART_OutString("Reverse Right");
 					//OutCRLF();
-					OS_Sleep(1);
 				}
 			}
-			lastState = 0;
-		}
+		} //CLOSE IF CASES
+		*/
   }
 	LEDS = RED;
   OS_Kill();  // never called
@@ -515,8 +642,6 @@ unsigned long myId = OS_Id();
 }
 //--------------------------End of PID------------------------------
 
-extern unsigned int pulsePeriodPing6_7;
-extern int pingPB6_7_ready;
 void PingTest(void) {
 	Timer0A_Init();
 	while(1) {
@@ -563,13 +688,21 @@ void CANTest() {
 
 void postLauntInits(){
 	long sr = StartCritical();
+	
+	//can
 	CAN0_Open();
 	//OS_AddPeriodicThread(&CanSendMessage,FS*2,2);           // 1 ms, higher priority
 	//Timer4_Init(&UserTask, 1600000); // initialize timer3 (10 Hz) // Sleep
+	
 	EndCritical(sr);
+	
+	//UART
 	UART_Init();
+	Timer0A_Init();
+	//Debug
 	//UART_OutString("Hello Lab 6.0.1");
-	OutCRLF();
+	//OutCRLF();
+	
 	OS_Kill();
 }
 
@@ -593,7 +726,7 @@ int main(void){
 	
 	ST7735_InitRDivided(INITR_REDTAB);
 	///periodic test
-	//OS_AddPeriodicThread(StartPingSensorPB6_7, 50* TIME_1MS,2);
+	OS_AddPeriodicThread(StartPingSensorPB6_7, 100* TIME_1MS,2);
 	
 	//create initial foreground threads
 	

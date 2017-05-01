@@ -10,16 +10,61 @@ Project File Date:  04/16/2017
 Build target 'ST7735'
 compiling ST7735TestMain.c...
 linking...
-Program Size: Code=9928 RO-data=2068 RW-data=820 ZI-data=12196  
+Program Size: Code=12600 RO-data=2068 RW-data=1300 ZI-data=14252  
 ".\ST7735.axf" - 0 Error(s), 0 Warning(s).
 Load "C:\\Users\\Admin\\Documents\\School\\Junior 2\\EE445M\\ValvanoWareTM4C123\\robot-lab6-7-ar47986_lk7236_jl57566_ecl625\\OS_Sensor_Brains_Main\\Lab3Working3PriorityBlockingFinal\\ST7735.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
-ash Download failed  -  Target DLL has been cancelled
-E445M\\ValvanoWareTM4C123\\robot-lab6-7-ar47986_lk7236_jl57566_ecl625\\OS_Sensor_Brains_Main\\Lab3Working3PriorityBlockingFinal\\ST7735.axf" 
+sor_Brains_Main\\Lab3Working3PriorityBlockingFinal\\ST7735.axf" 
 Connecting: Mode=JTAG, Speed=1000000Hz
 Erase Done.
 Programming Done.
 Verify OK.
+g6_7" is undefined
+                        pingDistance = (343 * pulsePeriodPing6_7)/1600000;
+ST7735TestMain.c(400): warning:  #550-D: variable "pingDistance" was set but never used
+  int pingDistance; 
+ST7735TestMain.c(546): error:  #20: identifier "pulsePeriodPing6_7" is undefined
+                        UART_OutUDec((343 * pulsePeriodPing6_7)/1600000); //accurate for close distances
+ST7735TestMain.c: 3 warnings, 4 errors
+".\ST7735.axf" - 4 Error(s), 3 Warning(s).
+Target not created
+
+ST7735TestMain.c(386): error:  #40: expected an identifier
+        LEDS = RED;
+ST7735TestMain.c(386): error:  #18: expected a ")"
+        LEDS = RED;
+ST7735TestMain.c(386): error:  #144: a value of type "int" cannot be used to initialize an entity of type "int *"
+        LEDS = RED;
+ST7735TestMain.c(387): warning:  #1295-D: Deprecated declaration OS_Kill - give arg types
+    OS_Kill();  // never called
+ST7735TestMain.c(387): error:  #260-D: explicit type is missing ("int" assumed)
+    OS_Kill();  // never called
+ST7735TestMain.c(387): error:  #147: declaration is incompatible with "void OS_Kill(void)" (declared at line 193 of "../LiuWareTM4C123Lab3/OS.h")
+    OS_Kill();  // never called
+ST7735TestMain.c(388): error:  #169: expected a declaration
+  } 
+ST7735TestMain.c(397): warning:  #12-D: parsing restarts here after previous syntax error
+  uint8_t XmtData[8];
+ST7735TestMain.c(433): error:  #20: identifier "XmtData" is undefined
+                                XmtData[0] = 1;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(439): warning:  #223-D: function "inBetween" declared implicitly
+                } else if( (inBetween(distance.BottomLeft, 50, 81) && (distance.BottomLeft > distance.BottomRight))
+ST7735TestMain.c(442): error:  #20: identifier "XmtData" is undefined
+                                XmtData[0] = 4;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(454): error:  #20: identifier "XmtData" is undefined
+                                XmtData[0] = 5;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(465): error:  #20: identifier "XmtData" is undefined
+                                XmtData[0] = 2;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(476): error:  #20: identifier "XmtData" is undefined
+                                XmtData[0] = 3;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(488): error:  #20: identifier "XmtData" is undefined
+                                        XmtData[0] = 6;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(494): error:  #20: identifier "XmtData" is undefined
+                                        XmtData[0] = 7;//PF0<<1;  // 0 or 2
+ST7735TestMain.c(563): error:  #20: identifier "XmtData" is undefined
+    XmtData[0] = 'H';//PF0<<1;  // 0 or 2
+ST7735TestMain.c: 4 warnings, 16 errors
+"ST7735TestMain.c" - 16 Error(s), 4 Warning(s).
