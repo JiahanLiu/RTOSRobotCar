@@ -1,0 +1,11 @@
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\can0.c
+.\can0.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\hw_can.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\hw_ints.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\hw_memmap.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\hw_types.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\can.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\debug.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\interrupt.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\can0.h
+.\can0.o: ..\LiuWareTM4C123Lab3\CAN\../../LiuWareTm4C123Lab3/tm4c123gh6pm.h

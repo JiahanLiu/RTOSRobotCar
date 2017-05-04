@@ -1,0 +1,13 @@
+.\os.o: ..\LiuWareTM4C123Lab3\OS.c
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/tm4c123gh6pm.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/OS.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PLL.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer5.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer0A.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/Timer1.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/PFEdgeTrigger.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ADC.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/IDQueue.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/ThreadPriorityPQueue.h
+.\os.o: ..\LiuWareTM4C123Lab3\../LiuWareTM4C123Lab3/LEDS.h
